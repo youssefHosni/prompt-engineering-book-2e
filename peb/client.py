@@ -54,6 +54,15 @@ def _client(kind):
     return _clients[kind]
 
 
+class Blocked(RuntimeError):
+    """The platform refused the request before the model ran.
+
+    Worth its own type. A blocked call is not a model behaviour and must never
+    be scored as one -- counting it as "the model did not comply" would be a
+    finding about a guardrail reported as a finding about a model.
+    """
+
+
 class _Usage:
     """Uniform usage object, so callers read the same fields either way."""
 
@@ -103,12 +112,29 @@ def ask(prompt, model=None, max_tokens=2000, system=None, **kw):
             # aggregator's failure mode specifically.
             raise RuntimeError(f"No choices in response: {getattr(r, 'error', r)!r}")
         choice = r.choices[0]
+        # A platform content filter is a THIRD outcome, distinct from a model
+        # refusal and from a successful call. It has no usage and no text, and
+        # collapsing it into either one loses the only fact that matters: the
+        # request never reached the model.
+        if choice.finish_reason == "content_filter":
+            raise Blocked(getattr(choice.message, "refusal", None)
+                          or "blocked by a platform content filter")
         text = choice.message.content or ""
         stop = "max_tokens" if choice.finish_reason == "length" else choice.finish_reason
-        # usage is absent often enough to matter: a filtered or errored response
-        # can carry text and no accounting. Crashing here loses the reply you
-        # already paid for.
+        # usage can be absent on a response that still carries text. Defaulting
+        # it to zero is fine ONLY when there is text; when there is neither text
+        # nor usage, the call did not happen and zero is a lie. Returning that
+        # quietly is the exact bug §13.1 opens with -- a silent failure the
+        # caller scores as a pass -- so it raises instead.
         u = getattr(r, "usage", None)
+        if u is None and not text.strip():
+            try:
+                body = r.model_dump()
+            except Exception:
+                body = repr(r)
+            raise RuntimeError(
+                f"Empty response with no usage: the call did not produce "
+                f"anything. Full body: {body}")
         usage = _Usage(getattr(u, "prompt_tokens", 0) or 0,
                        getattr(u, "completion_tokens", 0) or 0) if u else _Usage(0, 0)
 
@@ -119,5 +145,9 @@ def ask(prompt, model=None, max_tokens=2000, system=None, **kw):
             f"thinking. Raise max_tokens or lower effort. See §2.3.")
     if stop == "max_tokens":
         raise RuntimeError(f"Truncated at {max_tokens} tokens. See §2.3.")
+    if not text.strip():
+        # Whatever the stop reason, an empty string is not an answer. §13.1:
+        # if your checker can return nothing, treat nothing as a failure.
+        raise RuntimeError(f"Empty response (stop_reason={stop!r}). See §13.1.")
 
     return text, usage
