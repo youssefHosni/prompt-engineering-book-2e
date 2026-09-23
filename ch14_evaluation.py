@@ -14,7 +14,14 @@ import re
 from peb import ask
 
 # §14.1 — ten examples, written before the prompt was tuned. Each is an input
-# and the answer a competent human gives. Six ordinary, four awkward.
+# and the answer a competent human gives.
+#
+# The first ten are the ordinary set, and a current model scores 10/10 on them.
+# That is a warning about the set, not a result about the model: an eval where
+# everything passes cannot tell you where the prompt is broken, which is the
+# only thing §14.1 claims ten examples are good for. The six after them are the
+# awkward cases -- the ones a careful human still answers confidently but where
+# the rule genuinely bites.
 CASES = [
     ("Ordered on the 3rd, arrived the 11th. Ref KL-449021.",            "KL-449021"),
     ("order ref kl-449022, still waiting",                              "KL-449022"),
@@ -26,6 +33,14 @@ CASES = [
     ("Invoice INV-99812, not an order ref",                             "NONE"),
     ("kl-449028\nsent from my phone",                                   "KL-449028"),
     ("Order number 449029",                                             "NONE"),
+
+    # The awkward six. Each targets one clause of the rule.
+    ("Ref KL-44902 (five digits, typo on my part)",                     "NONE"),
+    ("contact me at kl-449030@example.com about the delay",             "NONE"),
+    ("> You wrote: your order KL-449031 has shipped\nThat is not mine.", "KL-449031"),
+    ("Order KL-449032 for my colleague, mine is KL-449033",             "KL-449032"),
+    ("the ref is K L - 4 4 9 0 3 4, spaced out on the label",           "KL-449034"),
+    ("no ref, but the invoice says KL-449035-R2 for the replacement",   "KL-449035"),
 ]
 
 PROMPT = ("Extract the order reference from the message. The format is KL- "
@@ -61,7 +76,7 @@ def fuzzy(got, want):
 
 
 def main():
-    print("§14.1  ten examples, scored three ways\n")
+    print(f"§14.1  {len(CASES)} examples, scored three ways\n")
     results = []
     for msg, want in CASES:
         got, _ = ask(PROMPT.format(msg=msg), max_tokens=4000)

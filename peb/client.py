@@ -97,10 +97,20 @@ def ask(prompt, model=None, max_tokens=2000, system=None, **kw):
                [{"role": "user", "content": prompt}]
         r = _client(kind).chat.completions.create(
             model=openrouter_id, max_tokens=max_tokens, messages=msgs, **kw)
+        if not getattr(r, "choices", None):
+            # An aggregator can return a body with no choices at all -- an
+            # upstream error surfaced as a 200. §2.5 on why that is the
+            # aggregator's failure mode specifically.
+            raise RuntimeError(f"No choices in response: {getattr(r, 'error', r)!r}")
         choice = r.choices[0]
         text = choice.message.content or ""
         stop = "max_tokens" if choice.finish_reason == "length" else choice.finish_reason
-        usage = _Usage(r.usage.prompt_tokens, r.usage.completion_tokens)
+        # usage is absent often enough to matter: a filtered or errored response
+        # can carry text and no accounting. Crashing here loses the reply you
+        # already paid for.
+        u = getattr(r, "usage", None)
+        usage = _Usage(getattr(u, "prompt_tokens", 0) or 0,
+                       getattr(u, "completion_tokens", 0) or 0) if u else _Usage(0, 0)
 
     # The two guard clauses from Appendix A, verbatim in spirit.
     if stop == "max_tokens" and not text.strip():

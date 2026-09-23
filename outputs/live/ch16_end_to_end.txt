@@ -1,0 +1,11 @@
+CUSTOMER  My Nordic 400 arrived 5 days late on order KL-449021, and the drip tray has already warped. What are you going to do about it?
+
+triage    {"intent": "claims", "order_ref": "KL-449021", "sentiment": "negative", "needs_human": false}
+
+attempt 1  (62 words)
+  Thanks for flagging both issues. The drip tray is a covered component and your order is marked replacement-eligible, so a free replacement will be arranged and shipped within 2 working days. On the late delivery, I'll check how the working-day calculation applies against your promised 3-day timeframe and come back to you. Any full purchase-price request would need a supervisor.
+  
+  Kestrel Support
+
+  -> passed every check. Sent.
+
