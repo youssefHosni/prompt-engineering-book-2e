@@ -1,0 +1,31 @@
+Chapter 10 — Skills: Packaging a Capability
+===========================================
+
+The output as printed in the book, from the run that produced the
+numbers in the text. Re-running the script will not reproduce it
+character for character -- that is the point of Chapter 3 §3.1, and
+of the Wilson intervals in Chapter 14. What should reproduce is the
+*finding*: the direction, the spread, and which checks fail.
+
+Source: manuscript/10-skills-architecture.md (3 recorded outputs)
+
+--- 10-skills-architecture.md:63 ----------------------------------
+
+six full skill bodies, always in the prompt      14,068 tokens
+six descriptions only                               215 tokens
+one body, loaded because it matched               2,394 tokens
+
+--- 10-skills-architecture.md:77 ----------------------------------
+
+                          1,000 requests/day     100,000 requests/day
+always loaded                    $42.20/day            $4,220.40/day
+descriptions only                 $0.65/day               $64.50/day
+
+--- 10-skills-architecture.md:156 ----------------------------------
+
+your-skill-name/
+├── SKILL.md          required — frontmatter + instructions
+├── scripts/          optional — code the skill can run
+├── references/       optional — style guides, examples, context
+└── assets/           optional — templates, fonts, icons
+

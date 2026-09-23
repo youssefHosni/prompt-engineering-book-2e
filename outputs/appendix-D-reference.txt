@@ -1,0 +1,17 @@
+Appendix D — Model and API Quick Reference
+==========================================
+
+The output as printed in the book, from the run that produced the
+numbers in the text. Re-running the script will not reproduce it
+character for character -- that is the point of Chapter 3 §3.1, and
+of the Wilson intervals in Chapter 14. What should reproduce is the
+*finding*: the direction, the spread, and which checks fail.
+
+Source: appendix/D-reference.md (1 recorded outputs)
+
+--- D-reference.md:36 ----------------------------------
+
+temperature, top_p, top_k     removed on current frontier models
+budget_tokens                 replaced by adaptive thinking + effort
+assistant prefill             returns 400
+

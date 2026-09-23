@@ -1,0 +1,41 @@
+Chapter 13 — Operating a Loop
+=============================
+
+The output as printed in the book, from the run that produced the
+numbers in the text. Re-running the script will not reproduce it
+character for character -- that is the point of Chapter 3 §3.1, and
+of the Wilson intervals in Chapter 14. What should reproduce is the
+*finding*: the direction, the spread, and which checks fail.
+
+Source: manuscript/13-loops-operating.md (5 recorded outputs)
+
+--- 13-loops-operating.md:23 ----------------------------------
+
+same model, "is this compliant? YES or NO"    caught 9 of 10
+separate checker, item-by-item checklist      caught 1 of 10
+three lines of Python                         caught 10 of 10
+
+--- 13-loops-operating.md:32 ----------------------------------
+
+''
+''
+''
+
+--- 13-loops-operating.md:72 ----------------------------------
+
+free text, 400-token budget      parsed  0 of 14      caught  —
+JSON schema                      parsed 12 of 14      caught  9 of 9
+
+--- 13-loops-operating.md:83 ----------------------------------
+
+the model's own word count: exact 12 of 12, mean error 0.0 words
+
+--- 13-loops-operating.md:138 ----------------------------------
+
+the file exists at the expected path
+it contains all required sections
+every figure quoted appears in the source data
+no section is empty
+length is within bounds
+the state file was updated this run
+

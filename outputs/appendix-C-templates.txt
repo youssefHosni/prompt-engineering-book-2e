@@ -1,0 +1,34 @@
+Appendix C — Prompt Template Library
+====================================
+
+The output as printed in the book, from the run that produced the
+numbers in the text. Re-running the script will not reproduce it
+character for character -- that is the point of Chapter 3 §3.1, and
+of the Wilson intervals in Chapter 14. What should reproduce is the
+*finding*: the direction, the spread, and which checks fail.
+
+Source: appendix/C-templates.md (2 recorded outputs)
+
+--- C-templates.md:11 ----------------------------------
+
+<role or standing rules>              -> system message, §2.1
+<the task, in one sentence>
+Audience: <who reads this>            -> §7.1
+Length: <a bound, never a count>      -> §3.2
+Include: <what must appear>
+Do not include: <what must not>       -> §3.4
+<format, or a schema>                 -> §8.2
+<the payload, delimited>              -> §3.3
+
+--- C-templates.md:152 ----------------------------------
+
+"You are an expert {X} with {N} years of experience."   no effect        §5.1
+"This is very important to my career."                  no effect        §5.1
+"I will tip you ${N}."                                  no effect        §5.1
+"IMPORTANT!!! BE ACCURATE."                             no effect        §5.1
+the same instruction repeated twice                     no effect        §5.3
+"Reply with only the number."                           12/12 -> 2/12    §4.1
+"Summarise in exactly 50 words."                        0/6 hit it       §3.2
+temperature=0.2                                         400 error        §5.5
+an assistant prefill                                    400 error        §5.5
+

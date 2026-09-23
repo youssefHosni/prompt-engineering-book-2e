@@ -1,0 +1,69 @@
+Chapter 9 — From Chains to Agents
+=================================
+
+The output as printed in the book, from the run that produced the
+numbers in the text. Re-running the script will not reproduce it
+character for character -- that is the point of Chapter 3 §3.1, and
+of the Wilson intervals in Chapter 14. What should reproduce is the
+*finding*: the direction, the spread, and which checks fail.
+
+Source: manuscript/09-agents.md (7 recorded outputs)
+
+--- 09-agents.md:34 ----------------------------------
+
+call 1:  len([r for r in rows if r['product'].lower()=='cement']),
+         sum(r['pallets'] for r in rows if r['product'].lower()=='cement')
+   ->    [56, 2812]
+
+final:   entries=56, pallets=2812
+
+--- 09-agents.md:48 ----------------------------------
+
+                            input tokens   result
+Chapter 2, rows in prompt         21,226   '' (empty)
+Chapter 9, one tool                1,195   entries=56, pallets=2812
+
+--- 09-agents.md:79 ----------------------------------
+
+call 1:  cement_entries = [row for row in rows if ...]
+   ->    {"error": "SyntaxError: invalid syntax (line 2)"}
+
+call 2:  len([row for row in rows if row['product'].lower() == 'cement'])
+   ->    {"result": 56}
+
+call 3:  sum(row['pallets'] for row in rows if row['product'].lower() == 'cement')
+   ->    {"result": 2812}
+
+--- 09-agents.md:161 ----------------------------------
+
+run 1   2 tool calls   "The depot log only contains fields for depot, pallets,
+                        and product — there is no customer satisfaction data."
+run 2   0 tool calls   "...there's no customer satisfaction field."
+run 3   0 tool calls   "I don't have enough information to answer that."
+
+--- 09-agents.md:180 ----------------------------------
+
+ 1 tool     correct 3/4
+ 6 tools    correct 4/4
+20 tools    correct 4/4
+
+--- 09-agents.md:191 ----------------------------------
+
+"A total of **2,812 pallets of cement** were delivered according to the log."
+
+--- 09-agents.md:205 ----------------------------------
+
+call 1   rows                                          -> the entire dataset
+call 2   cement = {}                                   -> SyntaxError
+         for r in rows: ...
+call 3   top_depot = max(                              -> SyntaxError
+             set(r['depot'] for r in rows ...
+call 4   max(set(...), key=lambda d: sum(...))         -> NameError: 'sum'
+call 5   depots = set(...)                             -> SyntaxError
+         cement_totals = {d: 0 for ...
+call 6   {d: sum([...]) for d in ...}                  -> {"Aberdeen": 567, ...}
+call 7   sum([r['pallets'] for r in rows
+              if r['depot']=='Aberdeen'])              -> 2891
+
+final    depot=Aberdeen, total=2891          correct
+

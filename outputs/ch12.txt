@@ -1,0 +1,89 @@
+Chapter 12 — Loops That Run Without You
+=======================================
+
+The output as printed in the book, from the run that produced the
+numbers in the text. Re-running the script will not reproduce it
+character for character -- that is the point of Chapter 3 §3.1, and
+of the Wilson intervals in Chapter 14. What should reproduce is the
+*finding*: the direction, the spread, and which checks fail.
+
+Source: manuscript/12-loops-building.md (4 recorded outputs)
+
+--- 12-loops-building.md:129 ----------------------------------
+
+loop/
+├── INSTRUCTIONS.md     what to do, every run          (you edit this)
+├── PROGRESS.md         where things stand             (the loop edits this)
+└── outputs/
+    └── digest-2026-08-24.md
+
+--- 12-loops-building.md:139 ----------------------------------
+
+1. Read PROGRESS.md. Note the last commit you processed.
+2. List merged pull requests since that commit.
+3. If there are none, write "no changes" to PROGRESS.md and stop.
+4. Group them into Added, Fixed, Needs attention.
+5. Write outputs/digest-<date>.md with all three sections present,
+   even if a section is empty.
+6. Update PROGRESS.md: last commit processed, date, what you wrote,
+   anything you could not classify.
+
+--- 12-loops-building.md:181 ----------------------------------
+
+# Loop Progress
+
+## Current State
+- Status:
+- Main objective:
+- Current focus:
+- Last updated:
+
+## Last Run
+- Date:
+- Trigger:
+- Summary:
+- Output produced:
+
+## Open Items
+## Blockers
+## Needs Human Review
+## Next Run Should
+## Decisions Made
+## Do Not Repeat
+
+--- 12-loops-building.md:229 ----------------------------------
+
+# Loop Progress
+
+## Current State
+- Status: healthy
+- Main objective: daily engineering digest
+- Current focus: none, routine
+- Last updated: 2026-08-24 07:02
+
+## Last Run
+- Date: 2026-08-24
+- Trigger: schedule
+- Summary: 6 PRs since a4f21c9. Wrote digest-2026-08-24.md.
+- Output produced: outputs/digest-2026-08-24.md
+
+## Open Items
+- PR #812 has no description; classified under Needs attention.
+
+## Blockers
+- (none)
+
+## Needs Human Review
+- (none)
+
+## Next Run Should
+- Start from commit 9d1e774.
+- Check whether #812 got a description; reclassify if so.
+
+## Decisions Made
+- "Needs attention" means unclear title or missing description, not
+  unfinished work.
+
+## Do Not Repeat
+- Do not include PRs labelled `dependencies` — decided 2026-08-19.
+

@@ -1,0 +1,83 @@
+Chapter 7 — The Task Playbook
+=============================
+
+The output as printed in the book, from the run that produced the
+numbers in the text. Re-running the script will not reproduce it
+character for character -- that is the point of Chapter 3 §3.1, and
+of the Wilson intervals in Chapter 14. What should reproduce is the
+*finding*: the direction, the spread, and which checks fail.
+
+Source: manuscript/07-task-playbook.md (10 recorded outputs)
+
+--- 07-task-playbook.md:15 ----------------------------------
+
+Ordered the Nordic 400 on the 3rd, arrived on the 11th which is longer than the
+3 days advertised. Machine itself is excellent - the burr grinder is much quieter
+than my old one and the espresso is genuinely good. Two problems though. The drip
+tray warped after about a week, it's very thin plastic. And the manual is clearly
+a bad translation, there's a step about "descaling the vapour wand" that makes no
+sense. Support answered in about 4 hours which was better than I expected. Would
+still recommend it but be prepared to buy a replacement tray. Order ref KL-449021.
+
+--- 07-task-playbook.md:48 ----------------------------------
+
+Two faults reported: the drip tray is made of very thin plastic and warped after
+about a week (moderate severity, affects usability and may require part
+replacement), and the user manual contains a poorly translated, incomprehensible
+step regarding "descaling the vapour wand" (minor severity, but could cause user
+confusion or improper maintenance). No other product defects were noted.
+
+--- 07-task-playbook.md:63 ----------------------------------
+
+Delivery for order KL-449021 took 8 days (3rd to 11th), significantly exceeding
+the advertised 3-day window. Customer support responded within approximately 4
+hours, which the customer noted as better than expected.
+
+--- 07-task-playbook.md:102 ----------------------------------
+
+order_ref: KL-449021
+ordered_date: the 3rd
+arrived_date: the 11th
+faults: drip tray warped after about a week (thin plastic); manual is a bad
+        translation (e.g. nonsensical "descaling the vapour wand" step)
+support_hours: 4 hours
+
+--- 07-task-playbook.md:139 ----------------------------------
+
+order_ref: KL-449021 | ordered_date: 3rd | arrived_date: 11th | support_hours: 4
+machine-usable: 0 of 6
+
+--- 07-task-playbook.md:147 ----------------------------------
+
+KL-449021 | 3 | 11 | 4
+machine-usable: 0 of 6
+
+--- 07-task-playbook.md:158 ----------------------------------
+
+order_ref: KL-449021 | ordered_date: 3 | arrived_date: 11 | support_hours: 4
+machine-usable: 6 of 6
+
+--- 07-task-playbook.md:195 ----------------------------------
+
+sentiment: mixed
+would_recommend: yes
+topics: delivery, build_quality, documentation, support
+
+--- 07-task-playbook.md:240 ----------------------------------
+
+Order ref KL-449021: Nordic 400 ordered on the 3rd, delivered on the 11th,
+exceeding the advertised 3-day window. Drip tray warps within a week. Manual
+contains unclear translated instructions regarding vapour wand descaling.
+Support response time is approximately 4 hours.
+
+--- 07-task-playbook.md:319 ----------------------------------
+
+Hi, thank you for the detailed review of your Nordic 400. We're glad the espresso
+quality and quieter grinder are hitting the mark. We apologise for the delay
+against our advertised 3-day delivery window for order KL-449021. We'd like to
+send a replacement drip tray free of charge to fix the warping issue. Also, thank
+you for flagging the manual translation error around descaling the wand - we're
+passing this to our documentation team for correction.
+
+Kestrel Support
+

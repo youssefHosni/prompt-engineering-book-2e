@@ -1,0 +1,82 @@
+Chapter 6 — Grounding, Hallucination, and Retrieval
+===================================================
+
+The output as printed in the book, from the run that produced the
+numbers in the text. Re-running the script will not reproduce it
+character for character -- that is the point of Chapter 3 §3.1, and
+of the Wilson intervals in Chapter 14. What should reproduce is the
+*finding*: the direction, the spread, and which checks fail.
+
+Source: manuscript/06-grounding.md (10 recorded outputs)
+
+--- 06-grounding.md:36 ----------------------------------
+
+                        answerable      unanswerable
+plain prompt              6/6 correct     6/6 refused
++ grounding instruction   6/6 correct     6/6 refused
+
+--- 06-grounding.md:57 ----------------------------------
+
+question                                      what the document actually says
+fuel surcharge on STANDARD deliveries?        4.5%, on EXPRESS deliveries
+cut-off time for STANDARD delivery?           14:00, for EXPRESS delivery
+MAXIMUM void fill for fragile items?          a MINIMUM of 40 mm
+within how many WORKING days to claim?        14 CALENDAR days
+maximum height for a NON-shrink-wrapped
+  pallet?                                     1.8 m, for shrink-wrapped pallets
+
+--- 06-grounding.md:75 ----------------------------------
+
+"The document specifies a minimum void fill of 40 mm for fragile items, not
+ a maximum."
+
+"The document specifies that damage claims must be raised within 14 calendar
+ days, not working days."
+
+"There is no specified order cut-off time for standard delivery."
+
+--- 06-grounding.md:108 ----------------------------------
+
+"The document doesn't mention Saturday delivery or its cost."
+"The document does not state any penalty for a missed express delivery."
+"There is no specified order cut-off time for standard delivery."
+"The handbook does not specify a pallet-specific format."
+"The document specifies a minimum void fill of 40 mm, not a maximum."
+"The document does not provide this information."
+
+--- 06-grounding.md:131 ----------------------------------
+
+plain prompt              correct behaviour, six different phrasings
++ grounding instruction   correct behaviour, one exact string: NOT IN DOCUMENT
+
+--- 06-grounding.md:155 ----------------------------------
+
+[Passage 1] Damage claims must be raised within 14 calendar days of delivery.
+[Passage 2] Damage claims must be raised within 30 calendar days of delivery.
+
+--- 06-grounding.md:162 ----------------------------------
+
+"The passages provide conflicting information: Passage 1 states damage claims
+ must be raised within 14 calendar days of delivery, while Passage 2 states
+ they must be raised within 30 calendar days."
+
+--- 06-grounding.md:179 ----------------------------------
+
+[Passage 1 — handbook revision 2024-03] ... within 14 calendar days.
+[Passage 2 — handbook revision 2026-01] ... within 30 calendar days.
+
+--- 06-grounding.md:186 ----------------------------------
+
+run 1   listed both, and noted "the passages do not indicate which revision
+        is current"
+run 2   "Based on the most recent revision (2026-01), damage claims must be
+        raised within 30 calendar days."
+run 3   listed both, observing that Passage 2 is the more recent revision
+
+--- 06-grounding.md:226 ----------------------------------
+
+1 relevant +   0 irrelevant passages    correct 6/6
+1 relevant +  10 irrelevant passages    correct 6/6
+1 relevant +  60 irrelevant passages    correct 6/6
+1 relevant + 200 irrelevant passages    correct 6/6
+

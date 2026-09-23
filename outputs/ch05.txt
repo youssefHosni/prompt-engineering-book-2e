@@ -1,0 +1,56 @@
+Chapter 5 — Patterns and Anti-Patterns
+======================================
+
+The output as printed in the book, from the run that produced the
+numbers in the text. Re-running the script will not reproduce it
+character for character -- that is the point of Chapter 3 §3.1, and
+of the Wilson intervals in Chapter 14. What should reproduce is the
+*finding*: the direction, the spread, and which checks fail.
+
+Source: manuscript/05-patterns.md (6 recorded outputs)
+
+--- 05-patterns.md:21 ----------------------------------
+
+condition                                    correct   output tokens/problem
+plain (baseline)                                3/12                       5
+role: "You are an expert mathematician"         3/12                       5
+emotional: "This is very important
+            to my career"                       3/12                       5
+incentive: "I will tip you $200"                2/12                       5
+threat: "I will stop using you"                 3/12                      10
+emphasis: "IMPORTANT!!! BE ACCURATE."           3/12                      11
+
+"Double check your arithmetic."                12/12                      91
+"Think step by step."                          12/12                     113
+
+--- 05-patterns.md:47 ----------------------------------
+
+"IMPORTANT!!! BE ACCURATE. THIS IS CRITICAL."     3/12      11 tokens
+"Double check your arithmetic."                  12/12      91 tokens
+"IMPORTANT!!! ... DOUBLE CHECK YOUR ARITHMETIC." 12/12      94 tokens
+
+--- 05-patterns.md:96 ----------------------------------
+
+                          correct   tokens/problem
+instruction first           12/12              110
+instruction last            12/12              233
+instruction at both ends    12/12              126
+
+--- 05-patterns.md:119 ----------------------------------
+
+                                    correct   tokens/problem
+once                                  12/12              224
+twice                                 11/12              225
+three times, with "it is CRITICAL"    12/12              254
+
+--- 05-patterns.md:145 ----------------------------------
+
+                          correct   opened as instructed
+no priming                  12/12                     —
+"Begin with WORKING:"       12/12                12 of 12
+
+--- 05-patterns.md:182 ----------------------------------
+
+plain, single sample                3/12
+plain, 5 samples, majority vote     3/12
+

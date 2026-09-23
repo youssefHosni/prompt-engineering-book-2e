@@ -1,0 +1,56 @@
+Chapter 16 — Building an End-to-End System
+==========================================
+
+The output as printed in the book, from the run that produced the
+numbers in the text. Re-running the script will not reproduce it
+character for character -- that is the point of Chapter 3 §3.1, and
+of the Wilson intervals in Chapter 14. What should reproduce is the
+*finding*: the direction, the spread, and which checks fail.
+
+Source: manuscript/16-end-to-end.md (5 recorded outputs)
+
+--- 16-end-to-end.md:75 ----------------------------------
+
+CUSTOMER  My Nordic 400 arrived 5 days late on order KL-449021.
+          What compensation do I get?
+triage    {"intent":"delivery", "order_ref":"KL-449021",
+           "sentiment":"negative", "needs_human":false}
+reply     Thank you for letting us know your Nordic 400 (order KL-449021)
+          arrived 5 days late. I don't have compensation details on file for
+          this situation, so I will check and come back to you with more
+          information. We appreciate your patience. Kestrel Support
+checks    FAIL ['length 46 outside 50-70']
+
+--- 16-end-to-end.md:127 ----------------------------------
+
+CUSTOMER  What is the fuel surcharge on a standard delivery?
+triage    {"intent":"surcharge", "order_ref":null, ...}
+reply     Our policy states that a fuel surcharge of 4.5% applies specifically
+          to express deliveries, reviewed quarterly. We don't have information
+          confirming a fuel surcharge for standard deliveries in our records.
+          I'll check on this further and get back to you...
+checks    PASS
+
+--- 16-end-to-end.md:148 ----------------------------------
+
+CUSTOMER  This is unacceptable, I want a full refund of 900 pounds and I'm
+          calling my lawyer.
+triage    {"intent":"claims", "order_ref":null,
+           "sentiment":"negative", "needs_human":true}
+          -> ROUTED TO HUMAN, no reply generated
+
+--- 16-end-to-end.md:205 ----------------------------------
+
+triage model        intent correct   escalation caught   missed   false alarms
+claude-sonnet-5             13/16              4 of 4        0             0
+claude-haiku-4.5            14/16              4 of 4        0             0
+
+validator pass rate (sonnet drafting)   11 of 12    one failure: length
+
+--- 16-end-to-end.md:228 ----------------------------------
+
+both models    "Do you deliver to Norway?"          -> delivery   (I labelled: other)
+both models    "Can I change my delivery address?"  -> delivery   (I labelled: other)
+sonnet only    "The box was crushed, what photos
+                do you need?"                       -> packaging  (I labelled: claims)
+

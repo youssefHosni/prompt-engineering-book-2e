@@ -1,0 +1,68 @@
+Chapter 11 — Writing a Skill That Works
+=======================================
+
+The output as printed in the book, from the run that produced the
+numbers in the text. Re-running the script will not reproduce it
+character for character -- that is the point of Chapter 3 §3.1, and
+of the Wilson intervals in Chapter 14. What should reproduce is the
+*finding*: the direction, the spread, and which checks fail.
+
+Source: manuscript/11-skills-writing.md (6 recorded outputs)
+
+--- 11-skills-writing.md:41 ----------------------------------
+
+identical, vague descriptions    23/30 correct — and 7 refusals to choose at all
+precise descriptions             30/30 correct
+
+--- 11-skills-writing.md:61 ----------------------------------
+
+description: Draft release notes from merged pull requests. Use when asked for
+             release notes, a changelog, or a summary of what shipped. Do not
+             use for individual commit messages or for incident write-ups.
+
+--- 11-skills-writing.md:108 ----------------------------------
+
+We've got this right. Turn what we just did into a skill I can use in other
+sessions — the process, the rules we discovered, and the format of the output.
+
+--- 11-skills-writing.md:130 ----------------------------------
+
+release-notes/
+├── SKILL.md
+├── references/
+│   ├── house-style.md          the tone, the tense, the banned words
+│   └── past-releases.md        six previous notes, as examples
+└── scripts/
+    └── merged_since.py         list merged PRs since a given tag
+
+--- 11-skills-writing.md:142 ----------------------------------
+
+---
+name: release-notes
+description: >
+  Draft release notes from merged pull requests. Use when asked for release
+  notes, a changelog, or a summary of what shipped in a version. Do not use
+  for individual commit messages, incident write-ups, or roadmap updates.
+---
+
+--- 11-skills-writing.md:157 ----------------------------------
+
+## Steps
+
+1. Run `scripts/merged_since.py <last-tag>` to list merged pull requests.
+2. Group them into Added, Changed, Fixed. Discard anything labelled
+   `internal` or `chore`.
+3. Read `references/house-style.md` before writing a word.
+4. Draft one line per item, present tense, no marketing adjectives.
+5. STOP. Show the draft and ask before writing to a file.
+6. On approval, write to `CHANGELOG.md` under a new version heading.
+
+## Rules
+
+- Never invent a change that is not in the PR list.
+- If a PR title is unclear, list it under `Needs description` rather than
+  guessing what it did.
+- Never edit an existing version heading. Append only.
+- If there are no merged PRs, say so and stop. Do not produce an empty
+  section.
+

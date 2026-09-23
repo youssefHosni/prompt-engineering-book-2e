@@ -1,0 +1,80 @@
+Chapter 2 — The Anatomy of a Request
+====================================
+
+The output as printed in the book, from the run that produced the
+numbers in the text. Re-running the script will not reproduce it
+character for character -- that is the point of Chapter 3 §3.1, and
+of the Wilson intervals in Chapter 14. What should reproduce is the
+*finding*: the direction, the spread, and which checks fail.
+
+Source: manuscript/02-anatomy-of-a-request.md (9 recorded outputs)
+
+--- 02-anatomy-of-a-request.md:29 ----------------------------------
+
+rule in system  ->  'tokyo'
+rule in user    ->  "i'm not able to use capital letters, even when asked.
+                     the capital of japan is tokyo."
+
+--- 02-anatomy-of-a-request.md:78 ----------------------------------
+
+content                  chars   tokens   chars/token
+English prose               92       27          3.41
+Arabic, same meaning        69       48          1.44
+Python source               88       30          2.93
+JSON                        88       48          1.83
+random identifiers          73       55          1.33
+one word repeated          219       60          3.65
+
+--- 02-anatomy-of-a-request.md:140 ----------------------------------
+
+max_tokens    finish_reason   output tokens   text
+        16    length                     13   ''
+        48    length                     45   ''
+       200    stop                      172   '3 hours and 35 minutes'
+       800    stop                      139   '3 hours 35 minutes'
+
+--- 02-anatomy-of-a-request.md:178 ----------------------------------
+
+Entry X. The internal reference code for the Kirkwall depot is QX-7741.
+
+--- 02-anatomy-of-a-request.md:185 ----------------------------------
+
+                    claude-sonnet-5        claude-haiku-4.5
+near the start      QX-7741  correct       QX-7741  correct
+in the middle       QX-7741  correct       QX-7741  correct
+near the end        QX-7741  correct       QX-7741  correct
+
+--- 02-anatomy-of-a-request.md:200 ----------------------------------
+
+                    entries   pallets     correct?
+ground truth             56      2812
+claude-sonnet-5           -         -     no answer at all
+claude-haiku-4.5         72      2271     no
+gpt-5.6-terra            55      2782     no
+
+--- 02-anatomy-of-a-request.md:252 ----------------------------------
+
+anthropic/claude-opus-5      HTTP 200   ->  'ok'
+anthropic/claude-sonnet-5    HTTP 200   ->  'Ok'
+
+--- 02-anatomy-of-a-request.md:271 ----------------------------------
+
+model                      median s    in   out      $/call   answer
+claude-opus-5                  4.47    64    48    0.001520   'Mixed'
+claude-sonnet-5                2.46    64     6    0.000188   'Mixed'
+claude-haiku-4.5               1.23    47     4    0.000067   'Mixed'
+gemini-3.7-flash               2.50    38   155    0.000305   'Mixed'
+gpt-5.6-terra                  1.11    43     5    0.000146   'mixed'
+
+--- 02-anatomy-of-a-request.md:322 ----------------------------------
+
+turn   prompt tokens   output tokens   cumulative input
+   1              55             137                 55
+   2             186             130                241
+   3             313             131                554
+   4             417             156                971
+   5             524              88              1,495
+   6             624             126              2,119
+   7             713             109              2,832
+   8             806             107              3,638
+

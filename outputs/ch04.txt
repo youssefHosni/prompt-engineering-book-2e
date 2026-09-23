@@ -1,0 +1,42 @@
+Chapter 4 — Giving the Model Room to Think
+==========================================
+
+The output as printed in the book, from the run that produced the
+numbers in the text. Re-running the script will not reproduce it
+character for character -- that is the point of Chapter 3 §3.1, and
+of the Wilson intervals in Chapter 14. What should reproduce is the
+*finding*: the direction, the spread, and which checks fail.
+
+Source: manuscript/04-room-to-think.md (4 recorded outputs)
+
+--- 04-room-to-think.md:28 ----------------------------------
+
+                                bare question    + "Reply with only the number."
+claude-haiku-4.5                 12/12  142 tok        2/12    5 tok
+claude-sonnet-5                  12/12  223 tok       12/12   46 tok
+
+--- 04-room-to-think.md:64 ----------------------------------
+
+model              condition                             correct   tokens/problem
+claude-haiku-4.5   "Reply with only the number"             2/12                5
+claude-haiku-4.5   ... + "think step by step"              12/12              114
+
+claude-sonnet-5    plain                                   12/12               49
+claude-sonnet-5    + "think step by step"                  12/12               54
+claude-sonnet-5    effort = low                            12/12               26
+claude-sonnet-5    effort = high                           12/12               50
+
+--- 04-room-to-think.md:142 ----------------------------------
+
+condition                     correct   output tokens/problem
+plain                            3/12                       5
++ "think step by step"          12/12                     116
++ "check your answer"           12/12                     106
++ steps, then check             12/12                     226
+
+--- 04-room-to-think.md:188 ----------------------------------
+
+claude-sonnet-5   plain          12/12    49 tokens/problem
+claude-sonnet-5   effort = low   12/12    26 tokens/problem
+claude-sonnet-5   effort = high  12/12    50 tokens/problem
+

@@ -1,0 +1,30 @@
+Appendix B — Instruction Fine-Tuning a Small Model
+==================================================
+
+The output as printed in the book, from the run that produced the
+numbers in the text. Re-running the script will not reproduce it
+character for character -- that is the point of Chapter 3 §3.1, and
+of the Wilson intervals in Chapter 14. What should reproduce is the
+*finding*: the direction, the spread, and which checks fail.
+
+Source: appendix/B-finetuning.md (2 recorded outputs)
+
+--- B-finetuning.md:26 ----------------------------------
+
+                   first edition (2024)   current
+transformers       4.x                    5.15
+peft               0.x, early             0.20
+datasets           2.x                    5.0
+torch              2.1                    2.13
+
+--- B-finetuning.md:39 ----------------------------------
+
+transformers==5.15.1
+peft==0.20.0
+datasets==5.0.1
+accelerate==1.14.0
+trl==1.10.0
+bitsandbytes==0.50.1        # only needed for 4-bit loading
+evaluate==0.4.6
+torch==2.13.0
+

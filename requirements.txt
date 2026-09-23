@@ -1,0 +1,7 @@
+anthropic>=1.0          # the primary SDK used throughout
+openai>=2.0             # the "On other providers" cells, and the OpenRouter path
+python-dotenv>=1.0      # key loading
+google-genai>=1.0       # the "On other providers" cells
+
+# Appendix B only, and only on a GPU. Install separately:
+#   pip install torch transformers datasets peft trl bitsandbytes

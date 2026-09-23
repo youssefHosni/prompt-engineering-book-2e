@@ -1,0 +1,43 @@
+Chapter 14 — Evaluating LLM Applications
+========================================
+
+The output as printed in the book, from the run that produced the
+numbers in the text. Re-running the script will not reproduce it
+character for character -- that is the point of Chapter 3 §3.1, and
+of the Wilson intervals in Chapter 14. What should reproduce is the
+*finding*: the direction, the spread, and which checks fail.
+
+Source: manuscript/14-evaluation.md (5 recorded outputs)
+
+--- 14-evaluation.md:35 ----------------------------------
+
+observed        true accuracy is somewhere in
+12 of 12        76% – 100%
+11 of 12        65% –  99%
+10 of 12        55% –  95%
+ 9 of 12        47% –  91%
+45 of 50        79% –  96%
+90 of 100       83% –  94%
+
+--- 14-evaluation.md:93 ----------------------------------
+
+                          judge correct    what it picked
+correct answer shown as A      12/12       A twelve times
+correct answer shown as B      12/12       B twelve times
+
+--- 14-evaluation.md:127 ----------------------------------
+
+                                          judge chose the correct answer
+terse + right  vs  elaborate + wrong                    16 of 16
+
+--- 14-evaluation.md:140 ----------------------------------
+
+judge              order 1 winner   order 2 winner
+claude-sonnet-5    gpt              sonnet
+gpt-5.6-terra      gpt              sonnet
+
+--- 14-evaluation.md:187 ----------------------------------
+
+bare 1-5 scale     5, 5, 5, 5, 5, 5, 5, 5      one distinct value
+4-point rubric     3, 3, 3, 3, 3               one distinct value
+

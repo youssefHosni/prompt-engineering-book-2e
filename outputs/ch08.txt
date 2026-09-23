@@ -1,0 +1,41 @@
+Chapter 8 — Structured Outputs and Tool Use
+===========================================
+
+The output as printed in the book, from the run that produced the
+numbers in the text. Re-running the script will not reproduce it
+character for character -- that is the point of Chapter 3 §3.1, and
+of the Wilson intervals in Chapter 14. What should reproduce is the
+*finding*: the direction, the spread, and which checks fail.
+
+Source: manuscript/08-structured-outputs.md (5 recorded outputs)
+
+--- 08-structured-outputs.md:27 ----------------------------------
+
+'```json\n{\n  "order_ref": "KL-449021",\n  "fault_count": 1\n}\n```'
+
+--- 08-structured-outputs.md:36 ----------------------------------
+
+                        parsed directly   needed repair   unparseable
+prompt only, 30 calls                 0              30             0
+with a JSON schema, 30 calls         30               0             0
+
+--- 08-structured-outputs.md:134 ----------------------------------
+
+free text, "reply with one word"     negative x7,  neutral x1
+with an enum of three values         mixed x6,     negative x2
+
+--- 08-structured-outputs.md:158 ----------------------------------
+
+{"order":{"ref":"KL-449021",
+          "timeline":{"ordered_day":3,"arrived_day":11}},
+ "faults":[{"part":"drip tray","severity":"moderate"}],
+ "support_hours":4}
+
+valid and correctly typed: 6 of 6
+
+--- 08-structured-outputs.md:229 ----------------------------------
+
+                              correct    what it called
+identical vague descriptions   23/30     tool_a 15, tool_b 8, no call at all 7
+precise descriptions           30/30     tool_a 15, tool_b 15
+
