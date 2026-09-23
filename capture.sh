@@ -31,7 +31,7 @@ for s in "${scripts[@]}"; do
   [ -f "$s" ] || { echo "skip: no script for that name" >&2; continue; }
   out="outputs/live/${s%.py}.txt"
   printf '%-34s ' "$s"
-  if python3 "$s" > "$out" 2>&1; then
+  if python3 -u "$s" > "$out" 2>&1; then
     echo "ok   -> $out"
   else
     echo "FAIL -> $out"

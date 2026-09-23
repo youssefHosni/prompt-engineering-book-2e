@@ -65,13 +65,19 @@ class _Usage:
         return f"Usage(in={self.input_tokens}, out={self.output_tokens})"
 
 
-def ask(prompt, model="claude-opus-5", max_tokens=2000, system=None, **kw):
+# The book used different models for different experiments, and says so in each
+# chapter. A script defaults to the one its chapter used; PEB_MODEL overrides.
+DEFAULT_MODEL = os.getenv("PEB_MODEL", "claude-opus-5")
+
+
+def ask(prompt, model=None, max_tokens=2000, system=None, **kw):
     """Call the model and fail loudly on the two silent failures from Chapter 2.
 
     Returns (text, usage). Returning usage alongside the text is deliberate:
     see Chapter 1 §1.6.
     """
     kind = backend()
+    model = model or DEFAULT_MODEL
     anthropic_id, openrouter_id = MODELS.get(model, (model, model))
 
     if kind == "anthropic":

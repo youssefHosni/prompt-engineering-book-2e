@@ -51,7 +51,7 @@ def triage(message):
               f"Reply with one JSON object matching this schema and nothing else.\n\n"
               f"{json.dumps(TRIAGE_SCHEMA, indent=2)}\n\n{TRIAGE_RULE}\n\n"
               f"Message: ```{message}```")
-    text, _ = ask(prompt, max_tokens=500)
+    text, _ = ask(prompt, max_tokens=4000)
     m = re.search(r"\{.*\}", text, re.S)
     if not m:
         raise ValueError(f"no JSON in triage reply: {text[:80]!r}")
@@ -68,7 +68,7 @@ def draft(message, order, feedback=None):
     if feedback:
         # Say what was wrong, not "try again". §12.3.
         prompt += f"\n\nYour previous draft failed these checks: {'; '.join(feedback)}"
-    text, _ = ask(prompt, max_tokens=700)
+    text, _ = ask(prompt, max_tokens=4000)
     return text.strip()
 
 

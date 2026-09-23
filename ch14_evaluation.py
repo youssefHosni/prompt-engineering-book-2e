@@ -64,7 +64,7 @@ def main():
     print("§14.1  ten examples, scored three ways\n")
     results = []
     for msg, want in CASES:
-        got, _ = ask(PROMPT.format(msg=msg), max_tokens=100)
+        got, _ = ask(PROMPT.format(msg=msg), max_tokens=4000)
         got = got.strip().splitlines()[0] if got.strip() else ""
         results.append((msg, want, got))
         mark = "ok " if exact(got, want) else "MISS"
@@ -79,7 +79,7 @@ def main():
     print("\n§14.4  the judge, scored against the labels\n")
     agree = 0
     for msg, want, got in results:
-        v, _ = ask(JUDGE.format(msg=msg, got=got or "(empty)", want=want), max_tokens=60)
+        v, _ = ask(JUDGE.format(msg=msg, got=got or "(empty)", want=want), max_tokens=4000)
         said_yes = v.strip().upper().startswith("YES")
         agree += (said_yes == exact(got, want))
     lo, hi = wilson(agree, n)

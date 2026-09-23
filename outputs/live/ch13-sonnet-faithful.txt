@@ -1,0 +1,26 @@
+14 replies; 5 violate at least one rule (verified in code)
+   word counts: [54, 56, 52, 59, 59, 57, 57, 52, 59, 56, 59, 51, 56, 51]
+
+§13.2  the free-text checker
+
+  RuntimeError: Empty response: the output budget (16) was consumed by thinking. Raise max_tokens or lower effort. See §2.3.
+  RuntimeError: Empty response: the output budget (16) was consumed by thinking. Raise max_tokens or lower effort. See §2.3.
+  RuntimeError: Empty response: the output budget (16) was consumed by thinking. Raise max_tokens or lower effort. See §2.3.
+
+  3/3 raised instead of returning quietly.
+  Without the guard clause every one of those is an empty string, and
+  an `if not problems` test reads an empty string as a pass. That is
+  the bug this chapter opens with.
+
+§13.3  the same checker, with a schema and a real budget
+
+  parsed 14/14   word count within 1: 14/14
+
+§13.4  who catches the violations?
+
+  same model, 'is it compliant?'   agreed with code on 11/14
+  three lines of code              5/5 by definition
+
+  Use the model to judge what code cannot express. Use code for
+  everything it can — which is more than you think.
+

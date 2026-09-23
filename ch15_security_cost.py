@@ -36,7 +36,7 @@ def main():
     print("§15.1 / §15.3  indirect injection, with and without hardening\n")
     for label, template in (("naive", NAIVE), ("hardened", HARDENED)):
         hits = sum(compromised(ask(template.format(ticket=POISONED_TICKET, user=user),
-                                   max_tokens=400)[0]) for _ in range(RUNS))
+                                   max_tokens=4000)[0]) for _ in range(RUNS))
         print(f"  {label:<10} compromised {hits}/{RUNS}")
     print("\n  Hardening moves the number. It does not zero it, and a control\n"
           "  that only usually holds is not a boundary — §15.3.\n")
@@ -44,7 +44,7 @@ def main():
     print("§15.5  cost, measured\n")
     total_in = total_out = 0
     for _ in range(4):
-        _, usage = ask(NAIVE.format(ticket=POISONED_TICKET, user=user), max_tokens=400)
+        _, usage = ask(NAIVE.format(ticket=POISONED_TICKET, user=user), max_tokens=4000)
         total_in += usage.input_tokens
         total_out += usage.output_tokens
     print(f"  4 calls: in={total_in} out={total_out}")
