@@ -48,12 +48,25 @@ ROUTING_CASES = [
 ]
 
 
+# An allowlist, not an empty namespace. Blanking __builtins__ entirely also
+# removes len, sum and round, which leaves the tool unable to answer any of the
+# questions it exists for -- a restriction so tight the feature stops working is
+# a bug, not security.
+SAFE_BUILTINS = {
+    "len": len, "sum": sum, "min": min, "max": max, "round": round,
+    "sorted": sorted, "set": set, "list": list, "dict": dict, "tuple": tuple,
+    "abs": abs, "any": any, "all": all, "enumerate": enumerate, "zip": zip,
+    "str": str, "int": int, "float": float, "bool": bool,
+}
+
+
 def evaluate(code):
-    """Restriction, not isolation. See §15.4."""
+    """Restriction, not isolation. See §15.4 -- a denylist of substrings is a
+    speed bump. Anything that matters runs in a real sandbox."""
     if any(tok in code for tok in ("import", "__", "open(", "exec", "eval")):
         return "refused: expression only"
     try:
-        return repr(eval(code, {"__builtins__": {}}, {"rows": ROWS}))
+        return repr(eval(code, {"__builtins__": SAFE_BUILTINS}, {"rows": ROWS}))
     except Exception as e:
         return f"error: {e}"
 

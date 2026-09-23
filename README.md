@@ -73,6 +73,17 @@ ship as a tree to copy rather than a script to run. See
 Appendix B (fine-tuning) needs a GPU and lives in `appendix_b_finetuning.py`.
 Nothing else in the book depends on it.
 
+## Tests
+
+```bash
+python test_offline.py
+```
+
+No key needed. It tests the *checkers* — the validators and scorers — rather
+than the model, which is the part most worth testing: Chapter 13 opens with a
+verification step that returned an empty string on every call while the scoring
+code read it as a pass.
+
 ## Shared code
 
 - `peb/client.py` — the `ask()` wrapper printed in Appendix A, which fails loudly
