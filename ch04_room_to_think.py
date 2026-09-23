@@ -21,11 +21,22 @@
 # chapter.
 
 # %%
+import os
 import re
 
 from peb import ask
 
 RUNS = 12
+
+# The chapter measures TWO models, and the contrast is the whole point:
+#
+#   claude-haiku-4.5   12/12 normally, 2/12 with "Reply with only the number"
+#   claude-sonnet-5    12/12 either way -- its thinking does not live in the text
+#
+# Running only a reasoning model gives 12/12 in both arms and looks like a null
+# result. That is not a refutation of the chapter, it is the chapter's second
+# row. Both are run here.
+MODELS = os.getenv("PEB_MODEL", "claude-haiku-4.5,claude-sonnet-5").split(",")
 
 # %% [markdown]
 # ## §4.2 Four numbered steps in one pass
@@ -75,15 +86,19 @@ WORD_PROBLEM = (
 # 141 x 18 = 2538 tins -> 2538 / 45 = 56 cartons remainder 18
 ANSWER_CARTONS, ANSWER_LEFT = 56, 18
 
-for label, suffix in (
-        ("room to think", " Show your working, then give the answer as "
-                          "'CARTONS: <n>  LEFTOVER: <n>'."),
-        ("answer only",   " Reply with only 'CARTONS: <n>  LEFTOVER: <n>' and "
-                          "no working.")):
-    right = 0
-    for _ in range(RUNS):
-        text, _ = ask(WORD_PROBLEM + suffix, max_tokens=4000)
-        m = re.search(r"CARTONS:\s*(\d+)\s+LEFTOVER:\s*(\d+)", text.upper())
-        right += bool(m) and (int(m.group(1)), int(m.group(2))) == (ANSWER_CARTONS,
-                                                                    ANSWER_LEFT)
-    print(f"{label:<15} {right}/{RUNS} correct")
+for model in MODELS:
+    print(f"\n{model}")
+    for label, suffix in (
+            ("room to think", " Show your working, then give the answer as "
+                              "'CARTONS: <n>  LEFTOVER: <n>'."),
+            ("answer only",   " Reply with only 'CARTONS: <n>  LEFTOVER: <n>' and "
+                              "no working.")):
+        right = tokens = 0
+        for _ in range(RUNS):
+            text, usage = ask(WORD_PROBLEM + suffix, model=model, max_tokens=4000)
+            tokens += usage.output_tokens
+            m = re.search(r"CARTONS:\s*(\d+)\s+LEFTOVER:\s*(\d+)", text.upper())
+            right += bool(m) and (int(m.group(1)), int(m.group(2))) == (ANSWER_CARTONS,
+                                                                        ANSWER_LEFT)
+        print(f"  {label:<15} {right}/{RUNS} correct   "
+              f"{tokens / RUNS:.0f} output tokens/problem")

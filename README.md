@@ -1,6 +1,8 @@
-# Prompt Engineering Best Practices for Instruction-Tuned LLM — code
+# Prompt Engineering 2.0: Agents, Skills, and Loops — code
 
-Runnable code for the **second edition** (2026).
+*Engineering Reliable Behaviour from Instruction-Tuned Models*
+
+Runnable notebooks for every chapter.
 
 > Looking for the first edition (2024)? It is archived at
 > [Prompt-Engineering-for-Instruction-Tuned-LLM](https://github.com/youssefHosni/Prompt-Engineering-for-Instruction-Tuned-LLM).
