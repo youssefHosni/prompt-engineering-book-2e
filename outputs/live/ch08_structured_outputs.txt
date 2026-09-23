@@ -1,0 +1,5 @@
+first reply: '```json\n{\n  "order_ref": "KL-449021",\n  "fault_count": 1\n}\n```'
+
+parsed without repair: 0/8 — the code fences are the usual culprit.
+valid against required keys: 8/8
+§8.5 needs ANTHROPIC_API_KEY. Tool use is the part of the API that genuinely differs between providers, so this section uses the Anthropic SDK directly rather than the book's ask() wrapper. Everything above runs on either key.

@@ -1,0 +1,56 @@
+Ordered the Nordic 400 on the 3rd, arrived on the 11th which is longer than the
+3 days advertised. Machine itself is excellent - the burr grinder is much quieter
+than my old one and the espresso is genuinely good. Two problems though. The drip
+tray warped after about a week, it's very thin plastic. And the manual is clearly
+a bad translation, there's a step about "descaling the vapour wand" that makes no
+sense. Support answered in about 4 hours which was better than I expected. Would
+still recommend it but be prepared to buy a replacement tray. Order ref KL-449021.
+--- summarise (product manager)
+**Faults reported:**
+
+The drip tray warped after roughly one week due to thin plastic, which is the higher-severity issue as it renders a component unusable and forces customers to buy a replacement. Secondarily, the manual contains a poor translation — notably an incoherent instruction on "descaling the vapour wand" — a moderate-severity documentation defect that risks incorrect maintenance and avoidable support contacts.
+
+--- summarise (logistics lead)
+Delivery on order KL-449021 took 8 days (3rd to 11th), well over the 3-day delivery window advertised. Support performance was strong, with a response in roughly 4 hours that exceeded the customer's expectations.
+
+--- extract
+order_ref | KL-449021
+ordered_date | the 3rd (no month specified)
+arrived_date | the 11th (no month specified)
+support_hours | about 4
+  [check] all_keys: True
+
+--- classify
+sentiment: mixed
+recommends: yes
+faults: late delivery (8 days vs 3 advertised), drip tray warped after a week, drip tray plastic too thin, poorly translated/confusing manual
+  [check] three_lines: True
+
+--- transform
+**SUPPORT TICKET**
+
+**Order Reference:** KL-449021
+**Product:** Nordic 400
+**Category:** Multiple — delivery delay, component defect, documentation error
+
+---
+
+**Delivery**
+Order placed on the 3rd; delivery received on the 11th. Advertised delivery window was 3 days. Actual transit time exceeded the advertised timeframe by approximately 5 days.
+
+**Product Performance (No Action Required)**
+Overall unit performance reported as excellent. The burr grinder was noted as significantly quieter than the customer's previou
+  [check] kept: all kept
+
+--- translate
+طلبتُ جهاز Nordic 400 في الثالث من الشهر، ووصل في الحادي عشر، أي في مدة أطول من الثلاثة أيام المُعلَن عنها. أما الجهاز نفسه فهو ممتاز — فمِطحنة الأقراص (burr) أقلّ ضجيجًا بكثير من مطحنتي القديمة، والإسبريسو لذيذ فعلًا. غير أن هناك مشكلتين: الأولى أن صينية التنقيط تشوّهت بعد نحو أسبوع، فهي مصنوعة من بلاستيك رقيق جدًا. والثانية أن دليل الاستخدام ترجمةٌ سيئة بشكل واضح، إذ يحتوي على خطوة عن "إزالة الترسيبات الكلسية من عصا البخار" لا معنى لها. وقد ردّ فريق الدعم في غضون أربع ساعات تقريبًا، وهو أفضل مما توقعت. ما زلت أنص
+  [check] latin_kept: True
+
+--- expand
+Thank you for the detailed feedback, and we're sorry the Nordic 400 took eight days to reach you rather than the three advertised. The warped drip tray isn't acceptable either — we'd like to send you a replacement free of charge, so just confirm your address against order KL-449021 and we'll get it dispatched. We've also flagged the confusing descaling instructions to our documentation team. Glad to hear the grinder and espresso are impressing you.
+
+Kestrel Support
+  [check] length: 77
+  [check] no_refund: True
+  [check] signed: True
+

@@ -1,0 +1,16 @@
+How many pallets of cement in total?
+  code   sum(r['pallets'] for r in rows if r['product'].strip().lower() == 'cem
+  result 260
+
+Which depot moved the most pallets?
+  code   max(((d, sum(r['pallets'] for r in rows if r['depot'] == d)) for d in 
+  result ('Hull', 200)
+
+What was the average customer satisfaction score for cement deliveries?
+  declined: The depot log has no customer satisfaction data — each row only contai
+
+Is the Leeds depot open on Saturday?           -> tool_c   (want tool_c)
+Where has order KL-449021 got to?              -> tool_b   (want tool_b)
+How many units of CEM-22 do we hold?           -> tool_a   (want tool_a)
+
+3/3 correct.

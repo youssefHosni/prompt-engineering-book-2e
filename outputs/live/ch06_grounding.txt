@@ -1,0 +1,15 @@
+What is the fuel surcharge?
+  -> 'Quoted sentence: "A fuel surcharge of 4.5% applies to all shipments booked after 2026-02-0'
+
+What is the penalty for a missed collection?
+  -> 'NOT IN DOCUMENT'
+
+**Fuel surcharge: 4.5%**, applying to **all shipments** booked after 2026-02-01.
+
+**Source used:** Kestrel Logistics Service Terms, revision **2026-01-14** — the later of the two revisions.
+
+**Conflict noted:** The earlier revision (2025-06-02) specified a **2.0%** surcharge limited to **palletised freight only**. The 2026-01-14 revision supersedes it on both the rate and the scope.
+
+One caveat wo
+
+cited the later revision: True

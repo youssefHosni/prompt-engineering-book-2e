@@ -1,0 +1,6 @@
+plain      8/10 inside the limit
+shouting   9/10 inside the limit
+urgent     10/10 inside the limit
+format     0/- inside the limit   (10/10 blocked upstream)
+
+Emphasis is not an instruction. Structure is.

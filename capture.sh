@@ -18,6 +18,15 @@ if [ ! -f "$PEB_ENV_FILE" ]; then
   exit 1
 fi
 
+# Notebook mode: regenerate the .ipynb files and execute them, embedding real
+# output. Runs through this script so it inherits PEB_ENV_FILE like everything
+# else -- one entry point, one place the key path is configured.
+if [ "${1:-}" = "--notebooks" ]; then
+  shift
+  echo "building notebooks (executing; this costs API calls)"
+  exec python3 -u build_notebooks.py --execute "$@"
+fi
+
 mkdir -p outputs/live
 scripts=()
 if [ $# -gt 0 ]; then
