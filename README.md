@@ -42,36 +42,51 @@ copying it in.
 
 ## Layout
 
-| Chapter | | Code |
+Each chapter is a notebook. Click a badge to run it in Colab with no setup —
+the first cell installs the SDKs and asks for your key. Or clone and open them
+locally; they are in `notebooks/`.
+
+| | Chapter | Run it |
 |---|---|---|
 | **Part I** | **Foundations** | |
-| 1 | How Instruction-Tuned Models Work | `ch01_instruction_following.py` |
-| 2 | The Anatomy of a Request | `ch02_anatomy_of_a_request.py` |
+| 1 | How Instruction-Tuned Models Work | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/youssefHosni/prompt-engineering-book-2e/blob/main/notebooks/ch01_instruction_following.ipynb) |
+| 2 | The Anatomy of a Request | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/youssefHosni/prompt-engineering-book-2e/blob/main/notebooks/ch02_anatomy_of_a_request.ipynb) |
 | **Part II** | **Core Technique** | |
-| 3 | Writing Clear Instructions | `ch03_clear_instructions.py` |
-| 4 | Giving the Model Room to Think | `ch04_room_to_think.py` |
-| 5 | Patterns and Anti-Patterns | `ch05_patterns.py` |
-| 6 | Grounding, Hallucination, and Retrieval | `ch06_grounding.py` |
+| 3 | Writing Clear Instructions | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/youssefHosni/prompt-engineering-book-2e/blob/main/notebooks/ch03_clear_instructions.ipynb) |
+| 4 | Giving the Model Room to Think | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/youssefHosni/prompt-engineering-book-2e/blob/main/notebooks/ch04_room_to_think.ipynb) |
+| 5 | Patterns and Anti-Patterns | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/youssefHosni/prompt-engineering-book-2e/blob/main/notebooks/ch05_patterns.ipynb) |
+| 6 | Grounding, Hallucination, and Retrieval | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/youssefHosni/prompt-engineering-book-2e/blob/main/notebooks/ch06_grounding.ipynb) |
 | **Part III** | **Applying It** | |
-| 7 | The Task Playbook | `ch07_task_playbook.py` |
-| 8 | Structured Outputs and Tool Use | `ch08_structured_outputs.py` |
-| 9 | From Chains to Agents | `ch09_agents.py` |
+| 7 | The Task Playbook | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/youssefHosni/prompt-engineering-book-2e/blob/main/notebooks/ch07_task_playbook.ipynb) |
+| 8 | Structured Outputs and Tool Use | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/youssefHosni/prompt-engineering-book-2e/blob/main/notebooks/ch08_structured_outputs.ipynb) |
+| 9 | From Chains to Agents | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/youssefHosni/prompt-engineering-book-2e/blob/main/notebooks/ch09_agents.ipynb) |
 | **Part IV** | **Skills and Loops** | |
-| 10 | Skills: Packaging a Capability | `ch10_12_skills_and_loops/` |
-| 11 | Writing a Skill That Works | `ch10_12_skills_and_loops/release-notes/` |
-| 12 | Loops That Run Without You | `ch10_12_skills_and_loops/loop/` |
-| 13 | Operating a Loop | `ch13_loops_operating.py` |
+| 10-12 | Skills, and Loops That Run Without You | [a directory to copy](ch10_12_skills_and_loops/) |
+| 13 | Operating a Loop | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/youssefHosni/prompt-engineering-book-2e/blob/main/notebooks/ch13_loops_operating.ipynb) |
 | **Part V** | **Production** | |
-| 14 | Evaluating LLM Applications | `ch14_evaluation.py` |
-| 15 | Security, Cost, and Latency | `ch15_security_cost.py` |
-| 16 | Building an End-to-End System | `ch16_end_to_end.py` |
+| 14 | Evaluating LLM Applications | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/youssefHosni/prompt-engineering-book-2e/blob/main/notebooks/ch14_evaluation.ipynb) |
+| 15 | Security, Cost, and Latency | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/youssefHosni/prompt-engineering-book-2e/blob/main/notebooks/ch15_security_cost.ipynb) |
+| 16 | Building an End-to-End System | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/youssefHosni/prompt-engineering-book-2e/blob/main/notebooks/ch16_end_to_end.ipynb) |
 
 Chapters 10 to 12 are about files and directories rather than API calls, so they
-ship as a tree to copy rather than a script to run. See
+ship as a tree to copy rather than a notebook. See
 [`ch10_12_skills_and_loops/README.md`](ch10_12_skills_and_loops/README.md).
 
-Appendix B (fine-tuning) needs a GPU and lives in `appendix_b_finetuning.py`.
-Nothing else in the book depends on it.
+Appendix B (fine-tuning) needs a GPU: `appendix_b_finetuning.ipynb`. Nothing
+else in the book depends on it.
+
+### Notebooks are generated, not edited
+
+The `.py` files beside the notebooks are the source of truth; the notebooks are
+built from them with jupytext:
+
+```bash
+python build_notebooks.py              # regenerate
+python build_notebooks.py --execute    # and run them, embedding output
+```
+
+Edit the `.py`, never the `.ipynb`. That way the two cannot drift, which is the
+same discipline `check-repo.py` enforces between the book and this repository.
 
 ## Tests
 
