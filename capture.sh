@@ -24,21 +24,22 @@ fi
 if [ "${1:-}" = "--notebooks" ]; then
   shift
   echo "building notebooks (executing; this costs API calls)"
-  exec python3 -u build_notebooks.py --execute "$@"
+  python3 -u build_notebooks.py --execute "$@" || exit $?
+  exec python3 check_notebooks.py
 fi
 
 mkdir -p outputs/live
 scripts=()
 if [ $# -gt 0 ]; then
-  for a in "$@"; do scripts+=("$(ls "${a}"*.py 2>/dev/null | head -1)"); done
+  for a in "$@"; do scripts+=("$(ls src/"${a}"*.py 2>/dev/null | head -1)"); done
 else
-  scripts=(ch*.py)
+  scripts=(src/ch*.py)
 fi
 
 fail=0
 for s in "${scripts[@]}"; do
   [ -f "$s" ] || { echo "skip: no script for that name" >&2; continue; }
-  out="outputs/live/${s%.py}.txt"
+  out="outputs/live/$(basename "${s%.py}").txt"
   printf '%-34s ' "$s"
   if python3 -u "$s" > "$out" 2>&1; then
     echo "ok   -> $out"

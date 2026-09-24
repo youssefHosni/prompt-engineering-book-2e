@@ -79,16 +79,28 @@ else in the book depends on it.
 
 ### Notebooks are generated, not edited
 
-The `.py` files beside the notebooks are the source of truth; the notebooks are
-built from them with jupytext:
-
-```bash
-python build_notebooks.py              # regenerate
-python build_notebooks.py --execute    # and run them, embedding output
+```
+src/        the .py sources    <- edit these
+notebooks/  the .ipynb files   <- generated; open these
 ```
 
-Edit the `.py`, never the `.ipynb`. That way the two cannot drift, which is the
-same discipline `check-repo.py` enforces between the book and this repository.
+`src/*.py` is the source of truth. The notebooks are built from it with
+jupytext, which keeps the diffs readable: a code review on a `.py` shows the
+change, a review on an `.ipynb` shows a wall of JSON.
+
+```bash
+python build_notebooks.py --execute    # regenerate and run, embedding output
+python check_notebooks.py              # fail if any notebook has drifted
+python test_offline.py                 # the checkers, no key needed
+```
+
+**Edit `src/`, never `notebooks/`.** A notebook edit is overwritten on the next
+build and leaves no trace of what it said.
+
+`check_notebooks.py` exists because this drifted within hours of being set up:
+ch04's script was fixed to run two models, the notebook was not regenerated, and
+the published notebook showed a null result where the chapter has its clearest
+finding. Nothing was checking. Now something is.
 
 ## Tests
 

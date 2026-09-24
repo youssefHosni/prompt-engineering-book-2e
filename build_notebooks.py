@@ -20,7 +20,8 @@ import nbformat
 
 REPO = "youssefHosni/prompt-engineering-book-2e"
 HERE = pathlib.Path(__file__).parent
-OUT = HERE / "notebooks"
+SRC = HERE / "src"          # the .py sources
+OUT = HERE / "notebooks"   # the generated .ipynb
 
 
 def badge(name):
@@ -41,9 +42,31 @@ if "google.colab" in sys.modules:
 """
 
 
+def has_output(path):
+    """Does an existing notebook carry executed output worth protecting?"""
+    if not path.exists():
+        return False
+    try:
+        nb = nbformat.read(path, as_version=4)
+    except Exception:
+        return False
+    return any(c.cell_type == "code" and c.get("outputs") for c in nb.cells)
+
+
 def build(script, execute=False):
     nb = jupytext.read(script)
     name = script.stem + ".ipynb"
+
+    # Regenerating without --execute produces a notebook with no output. If one
+    # with output already exists, that would silently destroy it -- which is
+    # exactly what happened once, to all fourteen at the same time. Refuse.
+    target = OUT / name
+    if not execute and has_output(target):
+        raise SystemExit(
+            f"{name} already has executed output.\n"
+            f"Regenerating without --execute would discard it.\n"
+            f"Use --execute to re-run, or delete {target} first if you really "
+            f"want an empty one.")
 
     # Badge goes above the title, then the Colab setup cell.
     nb.cells.insert(0, nbformat.v4.new_markdown_cell(badge(name)))
@@ -72,7 +95,7 @@ def main():
     ap.add_argument("only", nargs="*", help="name prefixes, e.g. ch03 ch14")
     args = ap.parse_args()
 
-    scripts = sorted(HERE.glob("ch*.py")) + [HERE / "appendix_b_finetuning.py"]
+    scripts = sorted(SRC.glob("ch*.py")) + [SRC / "appendix_b_finetuning.py"]
     if args.only:
         scripts = [s for s in scripts if any(s.name.startswith(p) for p in args.only)]
 
