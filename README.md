@@ -1,8 +1,26 @@
-# Prompt Engineering 2.0: Agents, Skills, and Loops — code
+<p align="center">
+  <img src="covers/front-cover.png" alt="Prompt Engineering 2.0: Agents, Skills, and Loops" width="380">
+</p>
 
-*Engineering Reliable Behaviour from Instruction-Tuned Models*
+<h1 align="center">Prompt Engineering 2.0: Agents, Skills, and Loops</h1>
 
-Runnable notebooks for every chapter.
+<p align="center">
+  <em>Engineering Reliable Behaviour from Instruction-Tuned Models</em><br>
+  Youssef Hosni
+</p>
+
+<p align="center">
+  <a href="https://youssefhosni.gumroad.com/l/xsmguv">
+    <img src="https://img.shields.io/badge/Get%20the%20book-Gumroad-FF90E8?style=for-the-badge&logoColor=black" alt="Get the book on Gumroad">
+  </a>
+</p>
+
+<p align="center">
+  <b>This repository is the code.</b> One runnable notebook per chapter, with the
+  output already in it.
+</p>
+
+---
 
 > Looking for the first edition (2024)? It is archived at
 > [Prompt-Engineering-for-Instruction-Tuned-LLM](https://github.com/youssefHosni/Prompt-Engineering-for-Instruction-Tuned-LLM).
@@ -69,6 +87,16 @@ locally; they are in `notebooks/`.
 | 14 | Evaluating LLM Applications | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/youssefHosni/prompt-engineering-book-2e/blob/main/notebooks/ch14_evaluation.ipynb) |
 | 15 | Security, Cost, and Latency | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/youssefHosni/prompt-engineering-book-2e/blob/main/notebooks/ch15_security_cost.ipynb) |
 | 16 | Building an End-to-End System | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/youssefHosni/prompt-engineering-book-2e/blob/main/notebooks/ch16_end_to_end.ipynb) |
+
+<p align="center">
+  <img src="covers/back-cover.png" alt="Back cover: what is inside the book" width="560">
+</p>
+
+<p align="center">
+  <a href="https://youssefhosni.gumroad.com/l/xsmguv">
+    <img src="https://img.shields.io/badge/Get%20the%20book-Gumroad-FF90E8?style=for-the-badge&logoColor=black" alt="Get the book on Gumroad">
+  </a>
+</p>
 
 Chapters 10 to 12 are about files and directories rather than API calls, so they
 ship as a tree to copy rather than a notebook. See
