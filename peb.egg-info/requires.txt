@@ -1,0 +1,16 @@
+anthropic>=1.0
+openai>=2.0
+python-dotenv>=1.0
+google-genai>=1.0
+
+[finetune]
+torch>=2.4
+transformers>=4.44
+datasets>=2.20
+peft>=0.12
+trl>=0.10
+
+[notebooks]
+jupytext>=1.19
+nbformat>=5.10
+nbclient>=0.10

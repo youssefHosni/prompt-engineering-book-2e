@@ -35,15 +35,20 @@ recorded so you can see whether your run agrees.
 ```bash
 git clone https://github.com/youssefHosni/prompt-engineering-book-2e
 cd prompt-engineering-book-2e
-python -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt
+python3 -m venv .venv && source .venv/bin/activate
+pip install -e .          # installs the peb package and its dependencies
 cp .env.example .env      # then add your key
 ```
+
+`pip install -e .` rather than `pip install -r requirements.txt`: the scripts in
+`src/` do `from peb import ask`, and only the editable install puts the `peb`
+package on the path. Add `pip install -e ".[notebooks]"` if you want to
+regenerate the notebooks.
 
 Then run a chapter:
 
 ```bash
-python ch03_clear_instructions.py
+python3 src/ch03_clear_instructions.py
 ```
 
 Each script prints the experiment for one chapter, section by section, with the

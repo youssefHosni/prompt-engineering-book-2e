@@ -10,6 +10,10 @@
 set -uo pipefail
 cd "$(dirname "$0")"
 
+# Make the repo root importable even without `pip install -e .`, so the
+# scripts in src/ can find the peb package beside them. V-1.
+export PYTHONPATH="$PWD${PYTHONPATH:+:$PYTHONPATH}"
+
 : "${PEB_ENV_FILE:=../../../Prompt-Engineering-for-Instruction-Tuned-LLM-main/.env}"
 export PEB_ENV_FILE
 

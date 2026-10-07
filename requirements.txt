@@ -1,7 +1,20 @@
+# Minimum versions, as of publication. These are floors, not pins.
+#
+# `pip install -e .` is the supported route -- it reads pyproject.toml, installs
+# these, and makes the `peb` package importable, which this file alone does not.
+# This file exists for environments that cannot do an editable install.
+
 anthropic>=1.0          # the primary SDK used throughout
 openai>=2.0             # the "On other providers" cells, and the OpenRouter path
 python-dotenv>=1.0      # key loading
 google-genai>=1.0       # the "On other providers" cells
 
-# Appendix B only, and only on a GPU. Install separately:
-#   pip install torch transformers datasets peft trl bitsandbytes
+# Only to regenerate or verify the notebooks:
+#   build_notebooks.py imports jupytext, nbformat, nbclient
+#   check_notebooks.py imports jupytext
+jupytext>=1.19
+nbformat>=5.10
+nbclient>=0.10
+
+# Appendix B only, and only on a GPU:
+#   pip install -e ".[finetune]"

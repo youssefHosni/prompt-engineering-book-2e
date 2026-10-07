@@ -1,0 +1,46 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "peb"
+version = "1.0.0"
+description = "Companion code for Prompt Engineering 2.0: Agents, Skills, and Loops"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "Youssef Hosni" }]
+
+# Minimum versions, as of publication. These are floors, not pins: see
+# Appendix A on SDK drift, and re-check them if a listing stops behaving.
+dependencies = [
+    "anthropic>=1.0",       # the primary SDK used throughout
+    "openai>=2.0",          # the "On other providers" cells, and the OpenRouter path
+    "python-dotenv>=1.0",   # key loading
+    "google-genai>=1.0",    # the "On other providers" cells
+]
+
+[project.optional-dependencies]
+# Only needed to regenerate or verify the notebooks. build_notebooks.py imports
+# jupytext, nbformat and nbclient; check_notebooks.py imports jupytext.
+notebooks = [
+    "jupytext>=1.19",
+    "nbformat>=5.10",
+    "nbclient>=0.10",
+]
+# Appendix B only, and only on a GPU.
+finetune = [
+    "torch>=2.4",
+    "transformers>=4.44",
+    "datasets>=2.20",
+    "peft>=0.12",
+    "trl>=0.10",
+]
+
+[project.urls]
+Homepage = "https://github.com/youssefHosni/prompt-engineering-book-2e"
+Book = "https://youssefhosni.gumroad.com/l/xsmguv"
+
+[tool.setuptools]
+# The package is peb/. src/ holds the chapter scripts, which are run, not imported.
+packages = ["peb"]
