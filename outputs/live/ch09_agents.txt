@@ -1,16 +1,68 @@
+log: 520 rows   cement: 56 entries, 2812 pallets   (§9.1 ground truth: 56, 2812)
 How many pallets of cement in total?
   code   sum(r['pallets'] for r in rows if r['product'].strip().lower() == 'cem
-  result 260
+  result 2812
 
 Which depot moved the most pallets?
-  code   max(((d, sum(r['pallets'] for r in rows if r['depot'] == d)) for d in 
-  result ('Hull', 200)
+  code   max((( d, sum(r['pallets'] for r in rows if r['depot'] == d) ) for d i
+  result ('Dundee', 4352)
 
 What was the average customer satisfaction score for cement deliveries?
-  declined: The depot log has no customer satisfaction data — each row only contai
+  declined: The depot log has no customer satisfaction data — each row contains on
 
 Is the Leeds depot open on Saturday?           -> tool_c   (want tool_c)
 Where has order KL-449021 got to?              -> tool_b   (want tool_b)
 How many units of CEM-22 do we hold?           -> tool_a   (want tool_a)
 
 3/3 correct.
+call 1:  (sum(1 for r in rows if r['product'] == 'cement'), sum(r['pallets'] for r in rows if r['
+   ->    (56, 2812)
+call 1:  sorted(set(r['product'] for r in rows))
+   ->    ['aggregate', 'cement', 'insulation', 'plasterboard', 'sand', 'timber']
+
+final:   **entries=56, pallets=2812**
+
+I checked the full set of product labels in the log (`aggregate`, `cement`, `insulation`, 
+turns:   1   input tokens: 1243
+correct: True   (truth 56, 2812)
+rows in prompt    input tokens   28014
+one tool          input tokens    1243
+ratio                22.5x
+
+Published in §9.1: 21,226 against 1,195. This log is a reconstruction,
+so the absolute figures differ; the ratio is the finding.
+call 1:  sum(1 for r in rows if r['product'] == 'cement')
+   ->    error: KeyError('tonnage') -- valid keys are depot, pallets, product
+call 1:  sum(r['pallets'] for r in rows if r['product'] == 'cement')
+   ->    2812
+call 2:  len([r for r in rows if r['product'] == 'cement'])
+   ->    56
+call 2:  sorted({r['product'] for r in rows})
+   ->    ['aggregate', 'cement', 'insulation', 'plasterboard', 'sand', 'timber']
+
+turns: 2
+the second call differs from the first: True
+That is the recovery, and it is only possible because the error was
+returned to the model rather than raised past it.
+call 1:  [(d, round(sum(r['pallets'] for r in rows if r['depot']==d)/sum(1 for r in rows if r['depot']==d
+   ->    [('Aberdeen', 62.8, 46), ('Bristol', 49.7, 55), ('Cardiff', 53.6, 59), ('Dundee', 53.7, 81), ('H
+call 2:  len({r['depot'] for r in rows})
+   ->    8
+
+final:  **Aberdeen** has the highest average pallets per delivery, at **62.8 pallets**. There are **8 depots** in total.
+
+Full ranking:
+
+| Depot | Avg pallets | Deliveries |
+|---|---|---|
+| Aberdeen | 62.8 | 
+
+2 tool call(s) over 1 turn(s); 1344 input tokens
+refused as statements : 0
+raised an error       : 0
+
+Published in §9.6: seven calls, four failures -- three statements
+rejected by the expression-only rule, one NameError on `sum` inside a
+lambda. The NameError cannot occur against the shipped tool: `sum` is in
+SAFE_BUILTINS, which is installed as __builtins__ inside globals, so it
+resolves inside a lambda. That failure belongs to an earlier version.

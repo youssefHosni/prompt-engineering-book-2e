@@ -50,6 +50,7 @@ def within_limit(text):
     return len(body.split()) <= 15
 
 
+results = {}
 for label, prompt in CONDITIONS.items():
     ok = blocked = 0
     for _ in range(RUNS):
@@ -58,7 +59,50 @@ for label, prompt in CONDITIONS.items():
         except Blocked:
             blocked += 1
     answered = RUNS - blocked
+    results[label] = {"ok": ok, "answered": answered, "blocked": blocked}
     note = f"   ({blocked}/{RUNS} blocked upstream)" if blocked else ""
     print(f"{label:<10} {ok}/{answered or '-'} inside the limit{note}")
 
-print("\nEmphasis is not an instruction. Structure is.")
+# %% [markdown]
+# ### The conclusion, computed rather than asserted
+#
+# The sentence this experiment exists to support is "emphasis is not an
+# instruction". Printing it regardless of what came back would make it an
+# assertion dressed as a result — and on at least one run `shouting` beat
+# `plain` 9 to 4, which that sentence does not survive.
+#
+# So compute it. With n=10 per condition the intervals are wide enough that
+# most differences are not separable, and saying so is the finding.
+
+# %%
+from peb.checks import wilson
+
+plain = results["plain"]
+if plain["answered"]:
+    p_lo, p_hi = wilson(plain["ok"], plain["answered"])
+    print(f"\nplain      {plain['ok']}/{plain['answered']}  95% CI [{p_lo:.0%}, {p_hi:.0%}]")
+    separable = []
+    for label, v in results.items():
+        if label == "plain" or not v["answered"]:
+            continue
+        lo, hi = wilson(v["ok"], v["answered"])
+        apart = lo > p_hi or hi < p_lo
+        separable.append((label, apart))
+        print(f"{label:<10} {v['ok']}/{v['answered']}  95% CI [{lo:.0%}, {hi:.0%}]"
+              f"   separable from plain: {apart}")
+
+    if not any(apart for _, apart in separable):
+        print("\nNo condition separates from plain at n=10. Emphasis is not an")
+        print("instruction; structure is — and this run cannot tell the emphasis")
+        print("conditions apart from each other either.")
+    else:
+        moved = [l for l, apart in separable if apart]
+        print(f"\nThese separate from plain at n=10: {', '.join(moved)}.")
+        print("That is more than emphasis alone should buy. Before concluding")
+        print("anything, check what else changed in those conditions — and raise n:")
+        print("§14.2 is the chapter on how little ten runs settle.")
+
+for label, v in results.items():
+    if v["blocked"]:
+        print(f"\n{label}: {v['blocked']}/{RUNS} refused by a platform filter before")
+        print("the model ran. That is not evidence about the model either way.")

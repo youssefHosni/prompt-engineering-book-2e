@@ -5,6 +5,6 @@ should use. This package adds one thing the book's listing leaves out: a fallbac
 to OpenRouter, because that is how the measurements in the book were actually
 gathered, and Chapter 2 §2.5 is honest about the tradeoff.
 """
-from .client import ask, MODELS, backend
+from .client import ask, run_tools, MODELS, backend
 
-__all__ = ["ask", "MODELS", "backend"]
+__all__ = ["ask", "run_tools", "MODELS", "backend"]

@@ -1,0 +1,29 @@
+6 skills found
+
+(the matched skill is invoice-validation)
+six full skill bodies, always in the prompt      4,534 tokens
+six descriptions only                              415 tokens
+one body, loaded because it matched                846 tokens
+
+published in §10.3: 14,068 / 215 / 2,394
+
+carrying descriptions alone is 11x cheaper than carrying bodies
+  (§10.3 publishes 65x)
+on a request where a skill fires you pay 415 + 846 = 1,261,
+  still 3.6x cheaper than always-loaded  (§10.3 publishes 5.4x)
+mean body            756 tokens   (§10.3 implies ~2,345)
+mean description      69 tokens   (§10.3 implies ~36)
+body : description = 11 : 1
+
+The two ratios are NOT equally durable, and the chapter treats them as if
+they were.
+
+  descriptions-vs-bodies (11x here, 65x published) is just the
+  body:description length ratio. That is a property of how long your
+  procedures are and how terse your descriptions are -- it is a fact about
+  a particular set of skills, not about progressive disclosure.
+
+  always-loaded-vs-fired (3.6x here, 5.4x published) is bounded by the
+  NUMBER of skills: it tends to 6x as bodies grow, from either side,
+  because you load one body instead of six. That one is structural, and it
+  is the ratio worth quoting.

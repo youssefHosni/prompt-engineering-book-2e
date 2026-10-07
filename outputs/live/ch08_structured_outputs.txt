@@ -2,4 +2,16 @@ first reply: '```json\n{\n  "order_ref": "KL-449021",\n  "fault_count": 1\n}\n``
 
 parsed without repair: 0/8 — the code fences are the usual culprit.
 valid against required keys: 8/8
-§8.5 needs ANTHROPIC_API_KEY. Tool use is the part of the API that genuinely differs between providers, so this section uses the Anthropic SDK directly rather than the book's ask() wrapper. Everything above runs on either key.
+§8.5's native tool loop needs ANTHROPIC_API_KEY and is SKIPPED. Tool use is the part of the API that genuinely differs between providers. Everything else in this chapter runs on either key.
+prose, 'reply with the label only'   24/24   95% CI [86%, 100%]
+the same three as a schema enum      24/24   95% CI [86%, 100%]
+
+Published in §8.3: eight runs each.
+four-level nested shape intact   6/6   95% CI [61%, 100%]
+Published in §8.4: 6 of 6.
+identical vague descriptions   15/30   tool_a 30
+                               95% CI [33%, 67%]
+precise descriptions           30/30   tool_a 15  tool_b 15
+                               95% CI [89%, 100%]
+
+Published in §8.5: 23/30 then 30/30.

@@ -1,33 +1,43 @@
-§14.1  16 examples, scored three ways
+[ok  ] want=KL-449021  got=KL-449021        'Ordered on the 3rd, arrived the 11'
+[ok  ] want=KL-449022  got=KL-449022        'order ref kl-449022, still waiting'
+[ok  ] want=KL-449023  got=KL-449023        'Ref: KL-449023 (second attempt)'
+[ok  ] want=KL-449024  got=KL-449024        'My order KL-449024 arrived damaged'
+[ok  ] want=KL-449025  got=KL-449025        'Reference KL449025 — no dash, sorr'
+[ok  ] want=KL-449026  got=KL-449026        'KL-449026 and KL-449027 both late'
+[ok  ] want=NONE       got=NONE             "I don't have the reference to hand"
+[ok  ] want=NONE       got=NONE             'Invoice INV-99812, not an order re'
+[ok  ] want=KL-449028  got=KL-449028        'kl-449028\nsent from my phone'
+[ok  ] want=NONE       got=NONE             'Order number 449029'
+[ok  ] want=NONE       got=NONE             'Ref KL-44902 (five digits, typo on'
+[MISS] want=NONE       got=KL-449030        'contact me at kl-449030@example.co'
+[ok  ] want=KL-449031  got=KL-449031        '> You wrote: your order KL-449031 '
+[ok  ] want=KL-449032  got=KL-449032        'Order KL-449032 for my colleague, '
+[ok  ] want=KL-449034  got=KL-449034        'the ref is K L - 4 4 9 0 3 4, spac'
+[ok  ] want=KL-449035  got=KL-449035        'no ref, but the invoice says KL-44'
 
-  [ok ] want=KL-449021  got=KL-449021        'Ordered on the 3rd, arrived the 11'
-  [ok ] want=KL-449022  got=KL-449022        'order ref kl-449022, still waiting'
-  [ok ] want=KL-449023  got=KL-449023        'Ref: KL-449023 (second attempt)'
-  [ok ] want=KL-449024  got=KL-449024        'My order KL-449024 arrived damaged'
-  [ok ] want=KL-449025  got=KL-449025        'Reference KL449025 — no dash, sorr'
-  [ok ] want=KL-449026  got=KL-449026        'KL-449026 and KL-449027 both late'
-  [ok ] want=NONE       got=NONE             "I don't have the reference to hand"
-  [ok ] want=NONE       got=NONE             'Invoice INV-99812, not an order re'
-  [ok ] want=KL-449028  got=KL-449028        'kl-449028\nsent from my phone'
-  [ok ] want=NONE       got=NONE             'Order number 449029'
-  [ok ] want=NONE       got=NONE             'Ref KL-44902 (five digits, typo on'
-  [MISS] want=NONE       got=KL-449030        'contact me at kl-449030@example.co'
-  [ok ] want=KL-449031  got=KL-449031        '> You wrote: your order KL-449031 '
-  [ok ] want=KL-449032  got=KL-449032        'Order KL-449032 for my colleague, '
-  [ok ] want=KL-449034  got=KL-449034        'the ref is K L - 4 4 9 0 3 4, spac'
-  [ok ] want=KL-449035  got=KL-449035        'no ref, but the invoice says KL-44'
+exact  15/16 = 94%   95% CI [72%, 99%]
 
-  exact  15/16 = 94%   95% CI [72%, 99%]
+fuzzy  15/16 = 94%   95% CI [72%, 99%]
+judge agreed with the label on 16/16   95% CI [81%, 100%]
+book's ch13 run    9/14 = 64%   95% CI [39%, 84%]
+a later re-run     5/14 = 36%   95% CI [16%, 61%]
 
-  fuzzy  15/16 = 94%   95% CI [72%, 99%]
+Those two intervals overlap between 39% and 61%. At n=14 the runs are not distinguishable,
+and reporting either as a fact would be overstating what was measured.
+correct answer shown as A    12/12   chose: A 12   95% CI [76%, 100%]
+correct answer shown as B    12/12   chose: B 12   95% CI [76%, 100%]
 
-§14.4  the judge, scored against the labels
+Published in §14.4: 12/12 and 12/12 — the judge tracked correctness,
+not position, on a task with a checkable answer.
+terse + right over elaborate + wrong   8/8   95% CI [68%, 100%]
+slots chosen: {'A': 4, 'B': 4}
 
-  judge agreed with the label on 16/16   95% CI [81%, 100%]
+Published in §14.4: 16 of 16 (over sixteen pairs; eight run here).
+judge                  1 shown as A   1 shown as B   consistent?
+claude-opus-5         picked expl-2  picked expl-1   NO -- followed position
+claude-sonnet-5       picked expl-2  picked expl-2   yes
 
-  A judge you have not scored is an opinion. Ten labels are enough
-  to find out whether it is a useful one — §14.4.
-
-  And note the interval. With ten examples, 9/10 and 7/10 overlap.
-  Ten examples tell you where the prompt is broken, not how good it is.
-
+On a question with no checkable answer, a judge that changes its verdict
+when the order changes is measuring the slot, not the content. That is why
+§14.4 says to score your judge before trusting it -- and why the positional
+test above, on arithmetic, cannot detect this failure.

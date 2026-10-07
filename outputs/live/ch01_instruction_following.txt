@@ -1,0 +1,17 @@
+run 1  words=3   Roof insulation increased
+run 2  words=3   Roof insulation increased
+run 3  words=3   **Stricter roof insulation**
+run 4  words=3   Roof insulation increased.
+run 5  words=4   Roof insulation requirements increased.
+run 6  words=3   Roof insulation increased
+
+5/6 runs hit exactly three words.
+I don't have any information about a product called the "AeroGlide UltraSlim Smart Toothbrush." I'd be cautious here — the name doesn't match anything I'm aware of, and I don't want to invent specs or features that sound plausible but aren't real.
+
+What I can tell you is that Boie (sometimes styled Boie USA) is a real company that makes personal care products, best known for toothbrushes and body scrubbers made from a soft, antimicrobial thermoplastic elastomer rather than conventional nylon bristles. Their pitch has centered on durability, recyclability, and replaceable heads. That said, my k
+
+hedged rather than invented: True
+three words    in=67    out=171   words=3     ratio=57.00
+api question   in=36    out=1702  words=246   ratio=6.92
+
+A ratio far above ~1.4 means tokens went somewhere the text did not.

@@ -6,3 +6,7 @@ __pycache__/
 *.pyc
 .venv/
 .DS_Store
+
+# run logs and preserved captures are evidence, not source
+outputs/run-log.jsonl
+outputs/live/_prev/

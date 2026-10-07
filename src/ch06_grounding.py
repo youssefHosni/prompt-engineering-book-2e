@@ -22,11 +22,15 @@
 from peb import ask
 from peb.checks import norm_dashes
 
+# §6.5 and §6.6 use short excerpts of the same handbook, so that one document
+# governs the chapter. The earlier stub said the surcharge applied to "all
+# shipments", which contradicts the handbook and destroys §6.3's first near-miss.
 DOC = """Kestrel Logistics Service Terms, revision 2026-01-14.
 
 Standard delivery is 3 working days from dispatch. Palletised freight over
-500 kg is 5 working days. A fuel surcharge of 4.5% applies to all shipments
-booked after 2026-02-01.
+500 kg is 5 working days. A fuel surcharge of 4.5% applies to Express
+deliveries booked after 2026-02-01. Standard delivery carries no fuel
+surcharge.
 """
 
 OLD = """Kestrel Logistics Service Terms, revision 2025-06-02.
@@ -51,9 +55,13 @@ reply with exactly: NOT IN DOCUMENT
 Question: {q}"""
 
 for q in (ANSWERABLE, UNANSWERABLE):
-    text, _ = ask(f"{DOC}\n\n" + grounded.format(q=q), max_tokens=4000)
+    text, _ = ask(f"{DOC}\n\n" + grounded.format(q=q),
+                  model="claude-opus-5", max_tokens=4000)
     first = text.strip().splitlines()[0] if text.strip() else ""
-    print(f"{q}\n  -> {first[:90]!r}\n")
+    # Branch on the sentinel exactly, which is the whole point of specifying one.
+    # Printing a repr for a human to eyeball is the posture §6.4 forbids.
+    refused = first.strip().rstrip(".").upper() == "NOT IN DOCUMENT"
+    print(f"{q}\n  -> refused={refused}  {first[:90]!r}\n")
 
 # %% [markdown]
 # ## §6.5 Two revisions that disagree
@@ -69,3 +77,189 @@ text, _ = ask(f"{OLD}\n---\n{DOC}\n\n{CONFLICT_RULE}\n\nQuestion: {ANSWERABLE}",
               max_tokens=4000)
 print(text.strip()[:400])
 print(f"\ncited the later revision: {'2026-01-14' in norm_dashes(text)}")
+
+# %% [markdown]
+# ## The handbook, the question sets, and the four experiments
+#
+# Provenance for everything below: `claude-opus-5` via OpenRouter, default
+# sampling, run date in `outputs/run-log.jsonl`, scoring in this file. The model
+# is passed explicitly rather than inherited from `PEB_MODEL`, so the script
+# records what it used instead of leaving it to an environment variable.
+#
+# The document is `src/data/kestrel_handbook.md`. Fictional so nothing in it can
+# be recalled from training; short so retrieval is not a variable.
+
+# %%
+import pathlib
+
+from peb import ask
+from peb.checks import wilson
+from peb.client import Blocked
+
+MODEL = "claude-opus-5"
+RUNS = 3          # §6.7's own argument: one run characterises nothing
+
+HANDBOOK = (pathlib.Path(__file__).parent / "data" / "kestrel_handbook.md").read_text()
+print(f"handbook: {len(HANDBOOK)} chars, {len(HANDBOOK.split())} words")
+
+SENTINEL = "NOT IN DOCUMENT"
+
+GROUNDED = (f"Answer using ONLY the document. If no sentence in the document "
+            f"answers the question, reply with exactly: {SENTINEL}\n\n"
+            f"{{doc}}\n\nQuestion: {{q}}")
+
+PLAIN = "{doc}\n\nQuestion: {q}"
+
+# %% [markdown]
+# ### The three question sets
+#
+# Six answerable, six absent-but-plausible, five near-miss. The near-miss set is
+# the interesting one: each has a wrong answer sitting in the text, in the right
+# units, under a plausible heading.
+
+# %%
+ANSWERABLE = [
+    ("How many working days is standard delivery?", ["3"]),
+    ("What is the cut-off for express delivery?", ["14:00", "2 p.m", "2pm"]),
+    ("How long do I have to submit a claim?", ["14"]),
+    ("What is the maximum height of a shrink-wrapped pallet?", ["1.8"]),
+    ("What is the liability limit per consignment?", ["100"]),
+    ("How much void fill do fragile items need?", ["40"]),
+]
+
+UNANSWERABLE = [
+    "What is the maximum parcel weight?",
+    "Which insurer underwrites the claims?",
+    "Is there Saturday delivery?",
+    "What is the contact number for the claims team?",
+    "How long are consignments held in storage before return?",
+    "What is the surcharge for a failed collection?",
+]
+
+# The trap and what the document actually says.
+NEAR_MISS = [
+    ("What is the fuel surcharge on STANDARD deliveries?", "4.5% is for EXPRESS"),
+    ("What is the cut-off time for STANDARD delivery?", "14:00 is for EXPRESS"),
+    ("What is the MAXIMUM void fill for fragile items?", "40 mm is a MINIMUM"),
+    ("Within how many WORKING days must a claim be submitted?", "14 is CALENDAR days"),
+    ("What is the maximum height for a NON-shrink-wrapped pallet?", "1.8 m is for shrink-wrapped"),
+]
+
+
+def refused(text):
+    """§6.4's own advice, applied: check the sentinel exactly, do not eyeball it.
+
+    The chapter's thesis is that a grounding instruction is worth having because
+    it yields a string you can branch on. A script that prints a repr for a human
+    to read is doing the thing the chapter forbids.
+    """
+    return text.strip().rstrip(".").upper() == SENTINEL
+
+
+def contains_any(text, needles):
+    return any(n.lower() in text.lower() for n in needles)
+
+
+BLOCKED = []
+
+
+def try_ask(prompt, q):
+    """Return the reply, or None if a platform filter refused the request.
+
+    A blocked call never reached the model, so it is not evidence about the
+    model. Counting it as a failure would report a finding about a guardrail as
+    a finding about grounding.
+    """
+    try:
+        return ask(prompt, model=MODEL, max_tokens=4000)[0]
+    except Blocked as e:
+        BLOCKED.append((q, str(e)[:70]))
+        return None
+
+
+# %% [markdown]
+# ### §6.2 Answerable and unanswerable, with and without the instruction
+
+# %%
+for label, template in (("plain prompt", PLAIN), ("+ grounding instruction", GROUNDED)):
+    correct = refusals = 0
+    blocked_before = len(BLOCKED)
+    for q, needles in ANSWERABLE:
+        reps = [try_ask(template.format(doc=HANDBOOK, q=q), q) for _ in range(RUNS)]
+        hits = sum(contains_any(r, needles) for r in reps if r is not None)
+        correct += hits == RUNS
+    for q in UNANSWERABLE:
+        reps = [try_ask(template.format(doc=HANDBOOK, q=q), q) for _ in range(RUNS)]
+        hits = sum(refused(r) for r in reps if r is not None)
+        refusals += hits == RUNS
+    asked = 6 * RUNS * 2
+    lost = len(BLOCKED) - blocked_before
+    if lost > asked * 0.25:
+        print(f"{label:<26} NO RESULT -- {lost} of {asked} calls were refused by a")
+        print(f"{'':<26} platform filter before the model ran. A condition this")
+        print(f"{'':<26} heavily intercepted measures the filter, not grounding.")
+    else:
+        print(f"{label:<26} {correct}/6 correct     {refusals}/6 refused"
+              f"   (all {RUNS} runs agreeing; {lost} blocked)")
+
+print(f"\nEach cell is {RUNS} runs; a cell counts only if every run agreed.")
+print("\nA platform filter intercepts the bare handbook: sending the document")
+print("with no instruction is refused reproducibly, and the same document with")
+print("a grounding instruction passes. So the unguided condition cannot be")
+print("measured on this path -- which is itself worth knowing, because a filter")
+print("that silently removes one arm of a comparison will make the other arm")
+print("look better than it is. §13.1: if the instrument can fail silently,")
+print("treat silence as failure.")
+print("Without the instruction, 'refused' means the reply carried no answer at")
+print("all -- the exact sentinel is only available when you ask for it, which is")
+print("§6.4's argument for asking.")
+
+# %% [markdown]
+# ### §6.3 The near-miss set
+#
+# The failure this guards against is not invention. It is handing back the
+# neighbouring fact, which looks entirely reasonable to a reader who has not
+# checked the document.
+
+# %%
+print(f"{'question':<58} {'refused':>8}  trap")
+for q, trap in NEAR_MISS:
+    reps = [try_ask(GROUNDED.format(doc=HANDBOOK, q=q), q) for _ in range(RUNS)]
+    hits = sum(refused(r) for r in reps if r is not None)
+    print(f"{q[:56]:<58} {hits}/{RUNS:<6}  {trap}")
+
+print("\nThe chapter says six near-miss questions and lists five. Five are")
+print("committed here; the sixth was not recoverable.")
+
+# %% [markdown]
+# ### §6.8 Distractors
+#
+# Does an irrelevant corpus around the handbook degrade the answer? Padding is
+# other sections of the same handbook, repeated and renumbered, so the
+# distractors are same-domain rather than random text.
+
+# %%
+DISTRACTOR = ("\n\n## Appendix {n}. Regional depot opening hours\n"
+              "Depot {n} operates 07:00 to 19:00 on working days. "
+              "Collections from depot {n} are consolidated nightly.\n")
+
+q, needles = ANSWERABLE[0]
+print(f"{'distractors':>12}  {'correct':>8}")
+for n_dist in (0, 25, 100, 200):
+    doc = HANDBOOK + "".join(DISTRACTOR.format(n=i) for i in range(n_dist))
+    reps = [try_ask(GROUNDED.format(doc=doc, q=q), q) for _ in range(RUNS)]
+    hits = sum(contains_any(r, needles) for r in reps if r is not None)
+    lo, hi = wilson(hits, RUNS)
+    print(f"{n_dist:>12}  {hits}/{RUNS:>6}   95% CI [{lo:.0%}, {hi:.0%}]")
+
+print(f"\nAt {RUNS} runs per row the intervals are very wide: this can show a")
+print("collapse, but it cannot establish 'no degradation'. §14.2 is the chapter")
+print("on what that takes.")
+
+
+# %%
+if BLOCKED:
+    print(f"\n{len(BLOCKED)} call(s) were refused by a platform filter before the")
+    print("model ran. Those are not evidence about grounding either way:")
+    for q, why in dict(BLOCKED).items():
+        print(f"  {q[:60]}\n    {why}")

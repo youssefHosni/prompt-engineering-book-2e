@@ -37,11 +37,17 @@ def evaluate(code, rows):
     if any(tok in code for tok in ("import", "__", "open(", "exec", "eval")):
         return "refused: expression only"
     try:
-        # `rows` goes in GLOBALS, not locals. eval() gives comprehension bodies
-        # their own scope that can see globals but not the locals mapping, so
-        # `sum(r["pallets"] for r in rows)` works while a nested comprehension
-        # raises "name 'rows' is not defined". Found by a live run; the tool
-        # answered one question and failed the next for no visible reason.
+        # `rows` and the builtins both go in GLOBALS, not locals, and that is
+        # the whole fix. eval() gives comprehension and lambda bodies their own
+        # scope which can see globals but NOT the locals mapping -- so with
+        # `rows` in locals, a plain `sum(r["pallets"] for r in rows)` worked
+        # while a nested comprehension raised "name 'rows' is not defined", and
+        # a name used inside a lambda was invisible. Both now work.
+        #
+        # §9.6's trace was captured before this fix and reports both failures.
+        # If you are reading that trace against this code, it will not reproduce
+        # -- which is the point the chapter makes about tool ergonomics, arriving
+        # one layer down.
         env = {"__builtins__": SAFE_BUILTINS, "rows": rows}
         return repr(eval(code, env, {}))
     except Exception as e:

@@ -1,18 +1,18 @@
-**1. Product:** Nordic 400 espresso machine, purchased approximately one month ago.
+**1. Product:** The Nordic 400 espresso machine, purchased approximately one month ago.
 
-**2. Category:** Complaint — it reports a hardware fault, though it closes with a question about next steps.
+**2. Message type:** Complaint (with an embedded question about repair vs. return).
 
-**3. Specific fault:** A loud grinding noise during extraction accompanied by complete loss of crema, beginning after roughly three weeks of normal use — symptoms consistent with a failing pump or a seized/worn grinder burr assembly.
+**3. Specific fault:** A loud grinding noise during shot extraction accompanied by complete loss of crema, beginning after roughly three weeks of normal use — symptoms consistent with a failing pump or a grinder/burr fault rather than user error.
 
 **4. Draft reply:**
-"Thanks for getting in touch, and I'm sorry the Nordic 400 has developed this noise — a grinding sound combined with lost crema usually points to a pump or grinder fault that needs servicing rather than a home fix. Since your machine is only a month 
+"Thanks for getting in touch, and I'm sorry the Nordic 400 has let you down so soon — a grinding noise combined with loss of crema usually points to a pump or burr fault, which isn't something we'd ask you to repair yourself. Since the machine is well within
 
 steps present: 4/4
 
 claude-haiku-4.5
-  room to think   12/12 correct   264 output tokens/problem
+  room to think   12/12 correct   270 output tokens/problem
   answer only     0/12 correct   16 output tokens/problem
 
 claude-sonnet-5
-  room to think   12/12 correct   563 output tokens/problem
-  answer only     12/12 correct   169 output tokens/problem
+  room to think   12/12 correct   549 output tokens/problem
+  answer only     12/12 correct   182 output tokens/problem

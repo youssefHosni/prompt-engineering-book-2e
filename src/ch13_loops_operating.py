@@ -126,6 +126,18 @@ for r, t in zip(replies, truth):
     same_model += (text.strip().upper().startswith("NO") == bool(t))
 
 print(f"same model, 'is it compliant?'   agreed with code on {same_model}/{RUNS}")
-print(f"three lines of code              {bad}/{bad} by definition")
+
+# The code row is not a competitor. `violations()` DEFINES the truth every other
+# checker is scored against, so any "n/n" printed for it is a tautology, not a
+# measurement — it cannot lose a comparison it is the answer key for.
+#
+# What is worth printing is the thing the model checker gets wrong, which is a
+# real number and the one the chapter's argument rests on.
+disagreed = RUNS - same_model
+print(f"three lines of code              the reference; not scored against itself")
+print(f"\nthe model checker disagreed with the code on {disagreed}/{RUNS} replies.")
+print("Each disagreement is either a miss or a false alarm, and the code is the")
+print("answer key only because these rules are expressible in code. §13.5 is")
+print("about the ones that are not.")
 print("\nUse the model to judge what code cannot express. Use code for")
 print("everything it can — which is more than you think.")

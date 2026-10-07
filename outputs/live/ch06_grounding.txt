@@ -1,15 +1,81 @@
 What is the fuel surcharge?
-  -> 'Quoted sentence: "A fuel surcharge of 4.5% applies to all shipments booked after 2026-02-0'
+  -> refused=False  '**Sentences used:**'
 
 What is the penalty for a missed collection?
-  -> 'NOT IN DOCUMENT'
+  -> refused=True  'NOT IN DOCUMENT'
 
-**Fuel surcharge: 4.5%**, applying to **all shipments** booked after 2026-02-01.
+**Using the later revision (2026‑01‑14).**
 
-**Source used:** Kestrel Logistics Service Terms, revision **2026-01-14** — the later of the two revisions.
+Per that revision:
 
-**Conflict noted:** The earlier revision (2025-06-02) specified a **2.0%** surcharge limited to **palletised freight only**. The 2026-01-14 revision supersedes it on both the rate and the scope.
+- **Express deliveries booked after 2026‑02‑01: 4.5% fuel surcharge.**
+- **Standard delivery: no fuel surcharge.**
 
-One caveat wo
+The earlier revision (2025‑06‑02), which set a 2.0% surcharge applying only to palletised freight, conflicts with this and is superseded.
+
+One caveat worth flagging: the later revision doesn't explicitly state the surcha
 
 cited the later revision: True
+handbook: 1966 chars, 314 words
+plain prompt               NO RESULT -- 28 of 36 calls were refused by a
+                           platform filter before the model ran. A condition this
+                           heavily intercepted measures the filter, not grounding.
++ grounding instruction    6/6 correct     6/6 refused   (all 3 runs agreeing; 0 blocked)
+
+Each cell is 3 runs; a cell counts only if every run agreed.
+
+A platform filter intercepts the bare handbook: sending the document
+with no instruction is refused reproducibly, and the same document with
+a grounding instruction passes. So the unguided condition cannot be
+measured on this path -- which is itself worth knowing, because a filter
+that silently removes one arm of a comparison will make the other arm
+look better than it is. §13.1: if the instrument can fail silently,
+treat silence as failure.
+Without the instruction, 'refused' means the reply carried no answer at
+all -- the exact sentinel is only available when you ask for it, which is
+§6.4's argument for asking.
+question                                                    refused  trap
+What is the fuel surcharge on STANDARD deliveries?         3/3       4.5% is for EXPRESS
+What is the cut-off time for STANDARD delivery?            3/3       14:00 is for EXPRESS
+What is the MAXIMUM void fill for fragile items?           3/3       40 mm is a MINIMUM
+Within how many WORKING days must a claim be submitted?    3/3       14 is CALENDAR days
+What is the maximum height for a NON-shrink-wrapped pall   3/3       1.8 m is for shrink-wrapped
+
+The chapter says six near-miss questions and lists five. Five are
+committed here; the sixth was not recoverable.
+ distractors   correct
+           0  3/     3   95% CI [44%, 100%]
+          25  3/     3   95% CI [44%, 100%]
+         100  3/     3   95% CI [44%, 100%]
+         200  3/     3   95% CI [44%, 100%]
+
+At 3 runs per row the intervals are very wide: this can show a
+collapse, but it cannot establish 'no degradation'. §14.2 is the chapter
+on what that takes.
+
+28 call(s) were refused by a platform filter before the
+model ran. Those are not evidence about grounding either way:
+  How many working days is standard delivery?
+    This request triggered restrictions on violative cyber content and was
+  What is the cut-off for express delivery?
+    This request triggered restrictions on violative cyber content and was
+  How long do I have to submit a claim?
+    This request triggered restrictions on violative cyber content and was
+  What is the maximum height of a shrink-wrapped pallet?
+    This request triggered restrictions on violative cyber content and was
+  What is the liability limit per consignment?
+    This request triggered restrictions on violative cyber content and was
+  How much void fill do fragile items need?
+    This request triggered restrictions on violative cyber content and was
+  What is the maximum parcel weight?
+    This request triggered restrictions on violative cyber content and was
+  Which insurer underwrites the claims?
+    This request triggered restrictions on violative cyber content and was
+  Is there Saturday delivery?
+    This request triggered restrictions on violative cyber content and was
+  What is the contact number for the claims team?
+    This request triggered restrictions on violative cyber content and was
+  How long are consignments held in storage before return?
+    This request triggered restrictions on violative cyber content and was
+  What is the surcharge for a failed collection?
+    This request triggered restrictions on violative cyber content and was

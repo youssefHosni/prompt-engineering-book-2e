@@ -32,7 +32,13 @@ if [ "${1:-}" = "--notebooks" ]; then
   exec python3 check_notebooks.py
 fi
 
-mkdir -p outputs/live
+mkdir -p outputs/live outputs/live/_prev
+
+# Every call is logged: script, model, date, tokens. The book asks each result to
+# state its model and sample size; this is where that comes from.
+: "${PEB_RUN_LOG:=outputs/run-log.jsonl}"
+export PEB_RUN_LOG
+
 scripts=()
 if [ $# -gt 0 ]; then
   for a in "$@"; do scripts+=("$(ls src/"${a}"*.py 2>/dev/null | head -1)"); done
@@ -44,6 +50,9 @@ fail=0
 for s in "${scripts[@]}"; do
   [ -f "$s" ] || { echo "skip: no script for that name" >&2; continue; }
   out="outputs/live/$(basename "${s%.py}").txt"
+  # Keep the previous capture. A failed run writes a stack trace over the file,
+  # and these are the only record of what the last run produced.
+  [ -f "$out" ] && cp "$out" "outputs/live/_prev/$(basename "$out")"
   printf '%-34s ' "$s"
   if python3 -u "$s" > "$out" 2>&1; then
     echo "ok   -> $out"
