@@ -91,6 +91,7 @@ print(f"\ncited the later revision: {'2026-01-14' in norm_dashes(text)}")
 
 # %%
 import pathlib
+import re
 
 from peb import ask
 from peb.checks import wilson
@@ -157,6 +158,12 @@ NEAR_MISS = [
     ("What is the MAXIMUM void fill for fragile items?", "40 mm is a MINIMUM"),
     ("Within how many WORKING days must a claim be submitted?", "14 is CALENDAR days"),
     ("What is the maximum height for a NON-shrink-wrapped pallet?", "1.8 m is for shrink-wrapped"),
+    # The sixth. §6.3 says six and listed five; the original sixth was not
+    # recoverable, so this one is new and built to the same shape against the
+    # committed handbook: liability is stated per CONSIGNMENT, so a question
+    # about per-PALLET liability has the neighbouring number in the right units
+    # under the right heading.
+    ("What is the liability limit per PALLET?", "100 GBP is per CONSIGNMENT"),
 ]
 
 
@@ -242,8 +249,9 @@ for q, trap in NEAR_MISS:
     hits = sum(refused(r) for r in reps if r is not None)
     print(f"{q[:56]:<58} {hits}/{RUNS:<6}  {trap}")
 
-print("\nThe chapter says six near-miss questions and lists five. Five are")
-print("committed here; the sixth was not recoverable.")
+print("\nSix questions, as §6.3 says. The original sixth was not recoverable, so")
+print("the liability one is new, built to the same shape against the committed")
+print("handbook rather than reconstructed from the chapter.")
 
 # %% [markdown]
 # ### §6.8 Distractors
@@ -269,6 +277,59 @@ for n_dist in (0, 25, 100, 200):
 print(f"\nAt {RUNS} runs per row the intervals are very wide: this can show a")
 print("collapse, but it cannot establish 'no degradation'. §14.2 is the chapter")
 print("on what that takes.")
+
+
+# %% [markdown]
+# ### §6.8 The citation check, actually run
+#
+# §6.8 says a quoted span "either appears verbatim in your source or it does
+# not, and that is a string comparison you can run in your own code". The
+# chapter was right and this file did not do it -- it printed ninety characters
+# of the reply for a human to read, which is the posture §6.4 forbids. Here is
+# the check.
+
+# %%
+CITED = (f"Answer using ONLY the document below. Quote the exact sentence you "
+         f"used, then give the answer. If no sentence in the document answers "
+         f"the question, reply with exactly: {SENTINEL}"
+         "\n\n{doc}\n\nQuestion: {q}")
+
+
+def quoted_span(text):
+    """The first double-quoted run in the reply, if there is one."""
+    parts = (text or "").split('"')
+    return parts[1] if len(parts) > 2 else ""
+
+
+def flat(s):
+    """Collapse whitespace before comparing.
+
+    Without this the check is a false-positive machine. The handbook is
+    hard-wrapped at 76 characters and the model quotes the sentence as one
+    line, so a plain `span in HANDBOOK` failed on a CORRECT answer three times
+    out of three -- it would have told you to discard a good reply. The
+    instrument, not the model. §13.1, one layer down.
+    """
+    return re.sub(r"\s+", " ", s or "").strip()
+
+
+print(f"{'question':<46} {'sentinel':>9} {'quote in source':>16}")
+for q, _trap in NEAR_MISS[:3] + ANSWERABLE[:3]:
+    text = try_ask(CITED.format(doc=HANDBOOK, q=q), q)
+    if text is None:
+        continue
+    span = quoted_span(text)
+    if not span:
+        verdict = "n/a"
+    elif flat(span) in flat(HANDBOOK):
+        verdict = "yes"
+    else:
+        verdict = "NO -- discard"
+    print(f"{q[:44]:<46} {str(refused(text)):>9} {verdict:>16}")
+
+print("\nA fabricated citation fails this check. A citation that is real but")
+print("answers a different question passes it, which is why §6.3's near-miss")
+print("set is a separate test rather than a corollary of this one.")
 
 
 # %%
