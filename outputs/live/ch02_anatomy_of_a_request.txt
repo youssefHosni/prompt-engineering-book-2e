@@ -1,16 +1,19 @@
-run 1  held=True  "tokyo\n\nthat's the answer, though i have to h"
-run 2  held=True  'the capital of japan is tokyo — though i hav'
-run 3  held=True  "tokyo — sorry, i can't do capitals, no matte"
-run 4  held=True  "tokyo\n\nsorry — i can't do capital letters, s"
-run 5  held=True  "tokyo — that's japan's capital. sorry, i can"
-run 6  held=True  "tokyo — sorry, i can't do capitals, so lower"
-run 7  held=True  "tokyo\n\nthat's the capital of japan — though "
-run 8  held=True  "tokyo — sorry, i can't do capital letters, s"
+rule in system   held 8/8   "tokyo\n\nsorry — i can't use capital letters, so that's the be"
+rule in user      held 8/8   "tokyo — that's the best i can do, since i'm set to never use"
 
-system rule held 8/8.
-max_tokens=16     RuntimeError: Empty response: the output budget (16) was consumed by thinking. Raise max_tokens or lower effort. See §2.3.
-max_tokens=64     out=39    '**3 hours 35 minutes**'
-max_tokens=4000   out=40    '**3 hours 35 minutes**'
+turn 1  held=True  "tokyo — sorry, i can't do capitals, so that's the be"
+turn 2  held=True  "i can't write in capitals — i reply only in lower ca"
+turn 3  held=True  "still lower case on my end — tokyo.\n\nthat's my limit"
+turn 4  held=True  "tokyo. that's the answer, and lower case is all i've"
+ max_tokens  stop_reason    out  text
+         16  max_tokens      16  ''
+         48  stop            39  '**3 hours 35 minutes**'
+        200  stop            39  '**3 hours 35 minutes**'
+        800  stop            39  '**3 hours 35 minutes**'
+
+The first rows are the failure §2.3 is about: tokens spent, nothing
+returned, and no exception unless you write one. With the guard in place
+every one of those raises instead.
 log: 520 rows
 ground truth: 56 cement entries, 2812 pallets
                    claude-sonnet-5     claude-haiku-4.5  
@@ -22,8 +25,8 @@ end                QX-7741  correct    QX-7741  correct
 On this document, at this length, position made no difference.
                     entries   pallets   correct?
 ground truth             56      2812
-claude-sonnet-5          55      2733   no   (28003 input tokens)
-claude-haiku-4.5         20      2573   no   (22857 input tokens)
+claude-sonnet-5          56      2812   yes   (28003 input tokens)
+claude-haiku-4.5         20      2074   no   (22857 input tokens)
 
 Retrieval is not aggregation. A model that finds one fact in 21,000
 tokens can still miscount what it found, and the failure is silent:

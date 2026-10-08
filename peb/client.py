@@ -113,7 +113,7 @@ def _log(model, max_tokens, prompt, text, usage, stop):
         f.write(json.dumps(rec) + "\n")
 
 
-def ask(prompt, model=None, max_tokens=2000, system=None, **kw):
+def ask(prompt, model=None, max_tokens=2000, system=None, raise_on_empty=True, **kw):
     """Call the model and fail loudly on the two silent failures from Chapter 2.
 
     Returns (text, usage). Returning usage alongside the text is deliberate:
@@ -176,7 +176,15 @@ def ask(prompt, model=None, max_tokens=2000, system=None, **kw):
         usage = _Usage(getattr(u, "prompt_tokens", 0) or 0,
                        getattr(u, "completion_tokens", 0) or 0) if u else _Usage(0, 0)
 
-    # The two guard clauses from Appendix A, verbatim in spirit.
+    # §2.3 demonstrates these guards, which means one script has to be able to
+    # see past them: raise_on_empty=False returns the starved reply so the
+    # chapter can print its stop_reason and token count. Nothing else should
+    # use it -- the whole argument of §13.1 is that silence must be a failure.
+    if not raise_on_empty:
+        _log(model, max_tokens, prompt, text, usage, stop)
+        return text, usage, stop
+
+    # The three guard clauses from Appendix A.
     if stop == "max_tokens" and not text.strip():
         raise RuntimeError(
             f"Empty response: the output budget ({max_tokens}) was consumed by "

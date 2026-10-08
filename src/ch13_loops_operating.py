@@ -97,22 +97,41 @@ CHECK = {"type": "object",
          "required": ["word_count", "signed"],
          "additionalProperties": False}
 
-parsed = caught = 0
+parsed = caught = unparseable = 0
 for r in replies:
     text, _ = ask(f"Return JSON matching this schema for the reply below.\n"
                   f"{json.dumps(CHECK)}\n\nReply:\n{r}", model=MODEL, max_tokens=4000)
     m = re.search(r"\{.*\}", text, re.S)
-    if not m:
+    obj = None
+    if m:
+        try:
+            obj = json.loads(m.group(0))
+        except Exception:
+            obj = None
+
+    if obj is None:
+        # §13.1's own rule, applied to this script: an unparseable verdict is a
+        # FAILURE, not an absence. The earlier version here said `continue`,
+        # which dropped it from the numerator AND the denominator -- so a
+        # checker that stopped parsing would have vanished from its own
+        # scorecard while the printed rate went up. That is the chapter's
+        # opening confession, committed a second time in the code presented as
+        # the repair.
+        unparseable += 1
         continue
-    try:
-        obj = json.loads(m.group(0))
-    except Exception:
-        continue
+
     parsed += 1
     if abs(obj.get("word_count", -1) - len(r.split())) <= 1:
         caught += 1
 
-print(f"parsed {parsed}/{RUNS}   word count within 1: {caught}/{max(parsed, 1)}")
+print(f"parsed {parsed}/{RUNS}   unparseable {unparseable}/{RUNS}")
+print(f"word count within 1: {caught}/{RUNS}  (over every run, not only the ones")
+print(f"that parsed -- a rate computed over survivors is how a failing checker")
+print(f"flatters itself)")
+if unparseable:
+    print(f"\nIn a loop rather than an experiment, those {unparseable} would halt or")
+    print("escalate. Here they are counted, which is the weakest acceptable form of")
+    print("not continuing.")
 
 # %% [markdown]
 # ## §13.4 Who catches the violations?

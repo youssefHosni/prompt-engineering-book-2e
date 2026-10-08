@@ -2,20 +2,19 @@ CUSTOMER  My Nordic 400 arrived 5 days late on order KL-449021, and the drip tra
 
 triage    {"intent": "claims", "order_ref": "KL-449021", "sentiment": "negative", "needs_human": false}
 
-attempt 1  (64 words)
-Thanks for flagging this. Your order arrived more than two working days beyond the three-working-day promise, so the delivery fee refund is applied automatically within five working days — nothing further is needed from you. The drip tray is a covered component that failed within 90 days of delivery, so we will replace it free of charge, shipped within two working days.
+attempt 1  (65 words)
+Thanks for flagging this. Your drip tray is a covered component and order KL-449021 is replacement-eligible, so a free replacement will be shipped within 2 working days of your request being confirmed. On the late delivery against the 3-working-day promise, I'll check what applies to your order and come back to you. Full purchase-price refunds require a supervisor, which I can't arrange here.
 
 Kestrel Support
 failed: ['mentions refund']
 
-attempt 2  (65 words)
-Thank you for flagging this, and I'm sorry the Nordic 400 didn't arrive when promised. Your order shows as delivered, and the drip tray is a covered component, so your record confirms you're eligible for a free replacement. I'll arrange that now; covered parts ship within 2 working days. On the late delivery itself, I'll check what applies and come back to you.
+attempt 2  (61 words)
+Thanks for flagging this on order KL-449021. The drip tray is a covered component, so a replacement is free of charge and ships within 2 working days — I'm arranging that now. On the delivery running past our 3-working-day promise, I'll check what applies to your order and come back to you with confirmation. Apologies for the inconvenience caused.
 
 Kestrel Support
 
 -> passed every check. Sent.
-16 messages, 4 requiring escalation
-triage model          intent correct   escalation caught   missed  false alarms
+16 messavalidator pass rate (claude-triage model          intent correct   escalation caught   missed  false alarms
 claude-sonnet-5                15/16              4 of 4        0             0
 claude-haiku-4.5               16/16              4 of 4        0             1
 
@@ -23,6 +22,7 @@ Published in §16.7: 13/16 and 14/16, 4 of 4 for both, 0 missed, 0 false alarms.
 
 claude-sonnet-5 disagreed with the label on:
   Unless you refund the 920 GBP today I wi   other != claims
-validator pass rate (claude-sonnet-5 drafting)   12 of 12   95% CI [76%, 100%]
+validator pass rate (claude-sonnet-5 drafting)   11 of 12   95% CI [65%, 99%]
+failures after 3 attempts: {'length': 1}
 
 Published in §16.7: 11 of 12, one failure: length.
