@@ -101,6 +101,7 @@ get_order = {
     "description": ("Look up exactly one order using its full reference. "
                     "The reference format is KL- followed by six digits. "
                     "Use only when the user has supplied such a reference."),
+    "strict": True,   # §8.5: without this the schema is advisory
     "input_schema": {
         "type": "object",
         "properties": {"order_ref": {"type": "string"}},
@@ -113,6 +114,7 @@ search_orders = {
     "name": "search_orders",
     "description": ("Search orders by customer name, product or date range when no "
                     "order reference is available. Returns up to 20 matches."),
+    "strict": True,   # §8.5: without this the schema is advisory
     "input_schema": {
         "type": "object",
         "properties": {"query": {"type": "string"}},

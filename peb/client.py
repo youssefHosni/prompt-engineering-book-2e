@@ -208,11 +208,18 @@ def ask(prompt, model=None, max_tokens=2000, system=None, raise_on_empty=True, *
 # error to the model. §9.2's central claim depends on the latter.
 
 def _to_openai_tool(t):
-    """Anthropic tool shape -> OpenAI/OpenRouter shape."""
-    return {"type": "function",
-            "function": {"name": t["name"],
-                         "description": t["description"],
-                         "parameters": t["input_schema"]}}
+    """Anthropic tool shape -> OpenAI/OpenRouter shape.
+
+    `strict` is where the two spellings differ: Anthropic puts it beside
+    `input_schema`, OpenAI puts it inside `function`. Without it the schema is
+    advisory on both -- §8.5's point, and the reason the flag is carried through
+    rather than dropped here.
+    """
+    fn = {"name": t["name"], "description": t["description"],
+          "parameters": t["input_schema"]}
+    if t.get("strict"):
+        fn["strict"] = True
+    return {"type": "function", "function": fn}
 
 
 def run_tools(prompt, tools, run_tool, model=None, max_tokens=2000,
