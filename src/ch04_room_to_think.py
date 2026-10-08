@@ -102,3 +102,48 @@ for model in MODELS:
                                                                         ANSWER_LEFT)
         print(f"  {label:<15} {right}/{RUNS} correct   "
               f"{tokens / RUNS:.0f} output tokens/problem")
+
+
+# %% [markdown]
+# ## The twelve problems, as a dataset
+#
+# §4.1 says "twelve multi-step word problems". The cells above run ONE problem
+# twelve times, which measures sampling variance rather than the instruction --
+# a different experiment with the same denominator. `peb.fixtures.ARITHMETIC_12`
+# is the twelve-problem version, generated from a fixed seed with every answer
+# computed and re-derived in `test_offline.py`.
+#
+# It is a RECONSTRUCTION of the shape §4.1 describes, not the original set,
+# which was not committed. So run it to reproduce the *method*; do not read a
+# disagreement with the published 12/12-and-2/12 as a correction to the book,
+# because a different problem set is a different measurement.
+
+# %%
+from peb.fixtures import ARITHMETIC_12
+
+ARMS = {
+    "bare question": "",
+    '+ "Reply with only the number."': " Reply with only the number.",
+}
+
+
+def pence(reply):
+    """Last money-looking figure in the reply, in whole pence."""
+    m = re.findall(r"£\s*(\d+(?:\.\d{1,2})?)", reply or "")
+    if m:
+        return round(float(m[-1]) * 100)
+    m = re.findall(r"(\d+(?:\.\d{1,2})?)", (reply or "").replace(",", ""))
+    return round(float(m[-1]) * 100) if m else None
+
+
+for model in MODELS:
+    print(f"\n{model}  (twelve problems, one run each)")
+    for label, suffix in ARMS.items():
+        hits = 0
+        for q, answer in ARITHMETIC_12:
+            text, _ = ask(q + suffix, model=model, max_tokens=4000)
+            hits += pence(text) == answer
+        print(f"  {label:<34}{hits:>3}/12")
+
+print("\nTwelve problems, not twelve runs of one. Both are legitimate and they")
+print("measure different things, which is why §4.1 now says which it means.")

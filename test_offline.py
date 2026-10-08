@@ -91,6 +91,30 @@ check("a bad expression returns an error, not a crash",
       evaluate("rows[99]", ROWS).startswith("error:"), True)
 
 
+# --- the arithmetic fixture -------------------------------------------------
+# Twelve problems whose answers are computed, not typed. The point of testing
+# them offline is that a word problem with a wrong stated answer is a scorer
+# that marks correct replies wrong -- the §13.1 failure, in the fixture.
+import re as _re
+
+from peb.fixtures import ARITHMETIC_12
+
+check("twelve problems", len(ARITHMETIC_12), 12)
+check("twelve distinct answers", len({a for _, a in ARITHMETIC_12}), 12)
+
+_WORD = {"half": 2, "third": 3, "quarter": 4, "fifth": 5}
+_derived = 0
+for _q, _a in ARITHMETIC_12:
+    _n = int(_re.search(r"buy (\d+) ", _q).group(1))
+    _p = round(float(_re.search(r"£([\d.]+) each", _q).group(1)) * 100)
+    _note = int(_re.search(r"£(\d+) note", _q).group(1)) * 100
+    _f = _WORD[_re.search(r"one (half|third|quarter|fifth)", _q).group(1)]
+    _change = _note - _n * _p
+    if _change > 0 and _change % _f == 0 and _change - _change // _f == _a:
+        _derived += 1
+check("every answer re-derives from its own question text", _derived, 12)
+
+
 if failures:
     print(f"{len(failures)} failure(s):\n")
     for f in failures:

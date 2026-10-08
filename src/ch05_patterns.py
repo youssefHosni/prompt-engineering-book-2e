@@ -38,8 +38,10 @@ CONDITIONS = {
     # engineering or duplicating model outputs" -- the WORKING:/ANSWER: framing
     # reads as an attempt to extract raw reasoning. It is kept, and the block is
     # reported as its own outcome, because a reader who writes this prompt will
-    # hit the same wall. Note that §4.4's "Show your working, then give the
-    # answer" is NOT affected; it runs normally.
+    # hit the same wall. The plainer framing is NOT affected and runs normally:
+    # "Show your working, then give the answer as 'CARTONS: <n>'", which is what
+    # ch04_room_to_think.py uses. It asks for the same visible reasoning without
+    # reading as a request for a reasoning trace.
     "format":   BASE + "\n\nBegin your reply with the line 'WORKING:' and show "
                        "your steps, then a line 'ANSWER:' with just the number.",
 }

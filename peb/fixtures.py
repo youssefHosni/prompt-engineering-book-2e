@@ -45,3 +45,66 @@ charge, shipped within 2 working days. Drip trays are a covered component.
 
 Escalation: refunds of the full purchase price require a supervisor and are not
 offered by support agents."""
+
+
+# --- Chapter 4 and 5: the twelve arithmetic word problems -------------------
+#
+# §4.1 describes "twelve multi-step word problems -- buy n items at p each, pay
+# with a note, spend a fraction of the change". The original twelve were not
+# committed, and the scripts ran ONE problem twelve times, which is a different
+# measurement: twelve runs measure sampling variance, twelve problems measure
+# the instruction. Both chapters print `n/12`.
+#
+# This is a reconstruction of that shape, not the original set. It is generated
+# from a fixed seed so the problems are stable, and every answer is COMPUTED
+# here rather than written down -- a word problem with a hand-typed answer is a
+# test of the author's arithmetic, which is the thing being measured.
+
+def arithmetic_12(seed=20260814):
+    """Twelve multi-step money problems with computed answers.
+
+    Returns a list of (question, answer) with the answer in whole pence, so
+    scoring is `==` rather than a float comparison. Every problem divides
+    exactly, every answer is distinct, and the four fractions are all used --
+    the first version of this filtered candidates by divisibility, which
+    silently made eleven of the twelve "one half".
+    """
+    import random
+    rng = random.Random(seed)
+    items = ["notebooks", "pens", "folders", "mugs", "batteries", "cables",
+             "sticky-note pads", "staplers", "envelopes", "markers",
+             "USB sticks", "clipboards"]
+    fracs = [2, 3, 4, 5] * 3                      # each used three times
+    out, seen = [], set()
+    for name, frac in zip(items, fracs):
+        for _ in range(4000):                     # search, do not discard
+            n = rng.randint(3, 9)
+            pence = rng.randrange(45, 500, 5)
+            note = rng.choice([1000, 2000, 5000])
+            change = note - n * pence
+            if change <= 0 or change % frac:
+                continue
+            answer = change - change // frac
+            if answer in seen:
+                continue
+            seen.add(answer)
+            out.append((
+                f"You buy {n} {name} at £{pence / 100:.2f} each and pay with a "
+                f"£{note // 100} note. You then spend one {_ordinal(frac)} of "
+                f"the change on a coffee. How much money do you have left? "
+                f"Answer in pounds and pence.",
+                answer))
+            break
+        else:
+            raise RuntimeError(f"no exact problem found for {name}/{frac}")
+    return out
+
+
+def _ordinal(frac):
+    return {2: "half", 3: "third", 4: "quarter", 5: "fifth"}[frac]
+
+
+ARITHMETIC_12 = arithmetic_12()
+assert len(ARITHMETIC_12) == 12, len(ARITHMETIC_12)
+assert len({a for _, a in ARITHMETIC_12}) == 12          # all answers distinct
+assert all(isinstance(a, int) and a > 0 for _, a in ARITHMETIC_12)
