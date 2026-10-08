@@ -32,7 +32,21 @@ import re
 
 from peb import ask
 
-SKILLS_DIR = pathlib.Path(__file__).parent.parent / "ch10_12_skills_and_loops"
+
+def _repo_root():
+    """Repo root, whether this runs as a script or as a notebook cell.
+
+    Notebook kernels have no `__file__`, so a path built from it raises
+    NameError on every cell below it. nbclient runs with cwd set to the repo
+    root, which is the fallback.
+    """
+    import pathlib
+    try:
+        return pathlib.Path(__file__).resolve().parent.parent
+    except NameError:
+        return pathlib.Path.cwd()
+
+SKILLS_DIR = _repo_root() / "ch10_12_skills_and_loops"
 METER = "claude-haiku-4.5"      # cheapest model; the tokeniser is what matters
 
 skills = sorted(p for p in SKILLS_DIR.glob("*/SKILL.md"))

@@ -22,6 +22,11 @@ if [ ! -f "$PEB_ENV_FILE" ]; then
   exit 1
 fi
 
+# Every call is logged: script, model, date, tokens. The book asks each result to
+# state its model and sample size; this is where that comes from.
+: "${PEB_RUN_LOG:=outputs/run-log.jsonl}"
+export PEB_RUN_LOG
+
 # Notebook mode: regenerate the .ipynb files and execute them, embedding real
 # output. Runs through this script so it inherits PEB_ENV_FILE like everything
 # else -- one entry point, one place the key path is configured.
@@ -33,11 +38,6 @@ if [ "${1:-}" = "--notebooks" ]; then
 fi
 
 mkdir -p outputs/live outputs/live/_prev
-
-# Every call is logged: script, model, date, tokens. The book asks each result to
-# state its model and sample size; this is where that comes from.
-: "${PEB_RUN_LOG:=outputs/run-log.jsonl}"
-export PEB_RUN_LOG
 
 scripts=()
 if [ $# -gt 0 ]; then

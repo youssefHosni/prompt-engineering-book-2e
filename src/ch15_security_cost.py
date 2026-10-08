@@ -31,6 +31,7 @@
 # %%
 from peb import ask
 from peb.client import Blocked
+from peb.fixtures import POLICY
 
 RUNS = 8
 
@@ -170,3 +171,86 @@ print(f"mean per call: in={total_in / max(counted, 1):.0f} "
       f"out={total_out / max(counted, 1):.0f}")
 print("\nMultiply by your own price card. Estimating this from the prompt length")
 print("is how people get surprised by the reasoning tokens.")
+
+# %% [markdown]
+# ## §15.4–15.5 The two caching experiments
+#
+# `cache_control` is Anthropic-specific and is passed through the native SDK, so
+# these two cells need `ANTHROPIC_API_KEY`. They are skipped without one rather
+# than silently reporting zeros — a cache experiment that cannot reach the cache
+# would report "nothing was cached" and look like a finding.
+
+# %%
+import os
+
+HAVE_ANTHROPIC = bool(os.getenv("ANTHROPIC_API_KEY"))
+if not HAVE_ANTHROPIC:
+    print("§15.4-15.5 need ANTHROPIC_API_KEY (cache_control is provider-specific)")
+    print("and are SKIPPED. Everything above runs on either key.")
+
+# A policy prompt long enough to be worth caching. The minimum cacheable prefix
+# is 1024 tokens on most tiers, so a short one silently caches nothing.
+POLICY_BLOCK = (POLICY + "\n\n") * 12
+QUESTION = "In one sentence: what is the claims window?"
+
+# %%
+if HAVE_ANTHROPIC:
+    import anthropic
+
+    client = anthropic.Anthropic()
+
+    def call(system_blocks, label):
+        r = client.messages.create(
+            model="claude-opus-5", max_tokens=200,
+            system=system_blocks,
+            messages=[{"role": "user", "content": QUESTION}])
+        u = r.usage
+        return (label,
+                u.input_tokens + getattr(u, "cache_read_input_tokens", 0)
+                + getattr(u, "cache_creation_input_tokens", 0),
+                getattr(u, "cache_read_input_tokens", 0),
+                getattr(u, "cache_creation_input_tokens", 0))
+
+    plain = [{"type": "text", "text": POLICY_BLOCK}]
+    marked = [{"type": "text", "text": POLICY_BLOCK,
+               "cache_control": {"type": "ephemeral"}}]
+
+    print(f"{'':<24}{'prompt tokens':>15}{'cached':>9}{'written to cache':>19}")
+    for _ in range(3):
+        lbl, total, read, write = call(plain, "without cache_control")
+        print(f"{lbl:<24}{total:>15,}{read:>9,}{write:>19,}")
+    print()
+    for _ in range(3):
+        lbl, total, read, write = call(marked, "with cache_control")
+        print(f"{lbl:<24}{total:>15,}{read:>9,}{write:>19,}")
+
+    print("\nThe cache is not automatic. It is a marker you place on the part of the")
+    print("request you are promising will not change.")
+
+# %% [markdown]
+# ### What actually breaks a cache
+#
+# The rule is that the cache matches a prefix, which people translate into "put
+# your changes at the end". This is the experiment that shows why that is wrong.
+
+# %%
+if HAVE_ANTHROPIC:
+    variations = [
+        ("identical prefix", POLICY_BLOCK),
+        ("one word appended at the END", POLICY_BLOCK + " Reviewed."),
+        ("timestamp prepended at the START", "2026-10-08. " + POLICY_BLOCK),
+        ("identical again", POLICY_BLOCK),
+    ]
+
+    print(f"{'':<36}{'cached_tokens':>14}")
+    for label, text in variations:
+        _, _, read, _ = call(
+            [{"type": "text", "text": text,
+              "cache_control": {"type": "ephemeral"}}], label)
+        print(f"{label:<36}{read:>14,}")
+
+    print("\nThe timestamp is expected: a byte changed at the front invalidates")
+    print("everything after it. The appended word is the surprise, and the reason")
+    print("is where the breakpoint sits -- the cached span is everything up to the")
+    print("marker, so text appended before that marker is INSIDE the cached")
+    print("content, not after it.")

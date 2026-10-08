@@ -99,7 +99,21 @@ from peb.client import Blocked
 MODEL = "claude-opus-5"
 RUNS = 3          # §6.7's own argument: one run characterises nothing
 
-HANDBOOK = (pathlib.Path(__file__).parent / "data" / "kestrel_handbook.md").read_text()
+
+def _repo_root():
+    """Repo root, whether this runs as a script or as a notebook cell.
+
+    Notebook kernels have no `__file__`, so a path built from it raises
+    NameError on every cell below it. nbclient runs with cwd set to the repo
+    root, which is the fallback.
+    """
+    import pathlib
+    try:
+        return pathlib.Path(__file__).resolve().parent.parent
+    except NameError:
+        return pathlib.Path.cwd()
+
+HANDBOOK = (_repo_root() / "src" / "data" / "kestrel_handbook.md").read_text()
 print(f"handbook: {len(HANDBOOK)} chars, {len(HANDBOOK.split())} words")
 
 SENTINEL = "NOT IN DOCUMENT"

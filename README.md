@@ -130,6 +130,12 @@ python test_offline.py                 # the checkers, no key needed
 **Edit `src/`, never `notebooks/`.** A notebook edit is overwritten on the next
 build and leaves no trace of what it said.
 
+**One notebook ships without stored output.** `ch08_structured_outputs.ipynb` is
+generated but not executed: its routing harness is 316 calls, the most expensive
+script here by a wide margin, and §8.5's tool loop needs an Anthropic key that
+the rest of the book's measurements were not made with. The code is complete and
+correct — run it yourself and it works. Every other notebook carries its results.
+
 `check_notebooks.py` exists because this drifted within hours of being set up:
 ch04's script was fixed to run two models, the notebook was not regenerated, and
 the published notebook showed a null result where the chapter has its clearest
