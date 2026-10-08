@@ -1,9 +1,10 @@
 """Shared helpers for the book's runnable examples.
 
-The book prints the Anthropic version of `ask()` (Appendix A). That is what you
-should use. This package adds one thing the book's listing leaves out: a fallback
-to OpenRouter, because that is how the measurements in the book were actually
-gathered, and Chapter 2 §2.5 is honest about the tradeoff.
+The book prints the Anthropic version of `ask()` (Appendix A), and that is what
+you should use. Its three guard clauses and its `system=` parameter are the same
+here; the only difference is a fallback to OpenRouter, because that is how the
+measurements in the book were gathered. §2.5 and Appendix A both disclose it,
+and §2.5 is the argument for not shipping against it.
 """
 from .client import ask, run_tools, MODELS, backend
 
