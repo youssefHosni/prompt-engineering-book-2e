@@ -1,13 +1,10 @@
 Appendix A — Environment Setup
 ==============================
 
-The output as printed in the book, from the run that produced the
-numbers in the text. Re-running the script will not reproduce it
-character for character -- that is the point of Chapter 3 §3.1, and
-of the Wilson intervals in Chapter 14. What should reproduce is the
-*finding*: the direction, the spread, and which checks fail.
+Extracted from the manuscript for reference. There is no script for
+this appendix.
 
-Source: appendix/A-setup.md (1 recorded outputs)
+Source: appendix/A-setup.md (1 recorded blocks)
 
 --- A-setup.md:24 ----------------------------------
 

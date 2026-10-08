@@ -26,7 +26,7 @@ with sections for Added, Fixed, and Needs attention.
 - Never invent a change that is not in the PR list.
 - If a PR title is unclear, put it under Needs attention. Do not guess.
 - Stop after 3 failed attempts at any step and record the failure under
-  **Blockers**. Do not retry silently — §12.3.
+  **Blockers**. Do not retry silently — §12.2.
 - You may write to `outputs/` and `PROGRESS.md`. Nothing else.
 
 ## Done means

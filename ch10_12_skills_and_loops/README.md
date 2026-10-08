@@ -32,7 +32,7 @@ Run it by hand. Six times, watching, before it goes anywhere near a schedule.
 entries under **Do Not Repeat** that exist because those runs went wrong.
 
 The separation matters more than anything else in the directory: instructions
-you write, state the loop writes. §12.6 is the argument for keeping them in
+you write, state the loop writes. §12.7 is the argument for keeping them in
 different files, and the failure it prevents is a loop editing its own
 instructions until they no longer say what you meant.
 

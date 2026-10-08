@@ -1,13 +1,11 @@
 Chapter 11 — Writing a Skill That Works
 =======================================
 
-The output as printed in the book, from the run that produced the
-numbers in the text. Re-running the script will not reproduce it
-character for character -- that is the point of Chapter 3 §3.1, and
-of the Wilson intervals in Chapter 14. What should reproduce is the
-*finding*: the direction, the spread, and which checks fail.
+Extracted from the manuscript for reference. There is no script for
+this chapter -- it is about files, not calls. See
+`ch10_12_skills_and_loops/` for the skills it describes.
 
-Source: manuscript/11-skills-writing.md (6 recorded outputs)
+Source: manuscript/11-skills-writing.md (6 recorded blocks)
 
 --- 11-skills-writing.md:41 ----------------------------------
 

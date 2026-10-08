@@ -8,7 +8,8 @@ description: >
 
 ## Steps
 
-1. Run `scripts/merged_since.py <last-tag>` to list merged pull requests.
+1. Run `scripts/merged_since.py <last-tag>` (requires the `gh` CLI,
+   authenticated) to list merged pull requests.
 2. Group them into Added, Changed, Fixed. Discard anything labelled
    `internal` or `chore`.
 3. Read `references/house-style.md` before writing a word.
@@ -22,5 +23,7 @@ description: >
 - If a PR title is unclear, list it under `Needs description` rather than
   guessing what it did.
 - Never edit an existing version heading. Append only.
+- If `merged_since.py` exits with an error rather than a list, stop and report
+  the error. Do not continue to step 2.
 - If there are no merged PRs, say so and stop. Do not produce an empty
   section.
