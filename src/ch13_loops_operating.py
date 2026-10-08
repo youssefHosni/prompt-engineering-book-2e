@@ -20,7 +20,7 @@
 # |---|---|
 # | 13.2 | the free-text checker that returns nothing |
 # | 13.3 | the same checker with a schema and a real budget |
-# | 13.4 | who catches violations: the model, a checklist, or three lines of code |
+# | 13.4 | who catches violations: the model, or three lines of code |
 #
 # **Pinned to Sonnet.** The chapter's numbers were measured on it. Running this
 # on a different model and reporting a different number would be a finding about
@@ -38,7 +38,7 @@ RUNS = 14
 MODEL = os.getenv("PEB_MODEL", "claude-sonnet-5")
 
 # %% [markdown]
-# Twenty distinct messages rather than one prompt repeated. Those measure
+# Fourteen distinct messages rather than one prompt repeated. Those measure
 # different things: one prompt run fourteen times measures sampling variance,
 # fourteen different messages measure the instruction — which is what the
 # chapter claims to be about.
