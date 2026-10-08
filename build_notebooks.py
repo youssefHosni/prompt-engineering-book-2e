@@ -53,6 +53,18 @@ def has_output(path):
     return any(c.cell_type == "code" and c.get("outputs") for c in nb.cells)
 
 
+def error_count(path):
+    """How many cells in an existing notebook ended in an exception."""
+    if not path.exists():
+        return 0
+    try:
+        nb = nbformat.read(path, as_version=4)
+    except Exception:
+        return 0
+    return sum(1 for c in nb.cells for o in c.get("outputs", [])
+               if o.get("output_type") == "error")
+
+
 def build(script, execute=False):
     nb = jupytext.read(script)
     name = script.stem + ".ipynb"
@@ -81,6 +93,20 @@ def build(script, execute=False):
                                resources={"metadata": {"path": str(HERE)}},
                                allow_errors=True)
         client.execute()
+
+    # Executing without a key makes every API cell raise, and writing that over
+    # a clean notebook destroys the output silently -- which is how this went
+    # wrong once. Refuse to replace a notebook with a more broken one.
+    if execute:
+        new_errors = sum(1 for c in nb.cells for o in c.get("outputs", [])
+                         if o.get("output_type") == "error")
+        was = error_count(target)
+        if new_errors > was:
+            raise SystemExit(
+                f"{name}: this run errored in {new_errors} cell(s), the existing "
+                f"notebook in {was}. Refusing to overwrite a cleaner notebook.\n"
+                f"Usually this means no key reached the kernel: run it through "
+                f"./capture.sh --notebooks, which exports PEB_ENV_FILE.")
 
     OUT.mkdir(exist_ok=True)
     nbformat.write(nb, OUT / name)

@@ -278,3 +278,66 @@ print("\nOn a question with no checkable answer, a judge that changes its verdic
 print("when the order changes is measuring the slot, not the content. That is why")
 print("§14.4 says to score your judge before trusting it -- and why the positional")
 print("test above, on arithmetic, cannot detect this failure.")
+
+
+# %% [markdown]
+# ## §14.5 The rubric experiment
+#
+# The chapter's claim is that a bare 1-to-5 scale carries no information and a
+# four-point rubric with named levels does. This is the experiment behind that
+# result, and it is the one worth repeating against your own rubric.
+#
+# Note what the two conditions share: the same explanation, the same judge, the
+# same number of runs. The only change is the scale.
+
+# %%
+import re as _re
+
+RUBRIC_RUNS = 8
+
+BARE = ("Rate this explanation of prompt caching from 1 to 5.\n\n"
+        f"{EXPL_1}\n\nReply with only the number.")
+
+# Four named levels, each in terms of something observable in the text. Level 4
+# requires the invalidation rule, which EXPL_1 does not state -- so a working
+# rubric should land on 3 and say why.
+RUBRIC = ("Score this explanation of prompt caching against the rubric.\n\n"
+          "1 -- wrong about what is cached, or describes output caching.\n"
+          "2 -- says caching saves money but not what is stored or when it hits.\n"
+          "3 -- names the stable prefix and the write/read cost asymmetry.\n"
+          "4 -- all of 3, and states what invalidates the cache.\n\n"
+          f"{EXPL_1}\n\nReply with only the number.")
+
+
+def score(reply):
+    """First integer in the reply, or None if it answered in prose."""
+    m = _re.search(r"\b([1-5])\b", reply or "")
+    return int(m.group(1)) if m else None
+
+
+for label, prompt in (("bare 1-5 scale", BARE), ("4-point rubric", RUBRIC)):
+    raw = [ask(prompt, max_tokens=4000)[0] for _ in range(RUBRIC_RUNS)]
+    got = [score(r) for r in raw]
+    parsed = [g for g in got if g is not None]
+    dropped = len(got) - len(parsed)
+    print(f"{label:<18} {parsed}   {len(set(parsed))} distinct value"
+          f"{'' if len(set(parsed)) == 1 else 's'}"
+          f"{f'   ({dropped} of {RUBRIC_RUNS} returned prose, dropped)' if dropped else ''}")
+
+print("\nRead the two rows against each other, not against the book. §14.5 "
+      "publishes")
+print("eight 5s on the bare scale and five 3s on the rubric with three runs "
+      "dropped")
+print("as prose. Two runs on 2026-10-08 returned a bare scale moving between 4 "
+      "and 5")
+print("and eight 3s with nothing dropped: the rubric reproduced exactly, the "
+      "ceiling")
+print("did not, and the prose failure did not recur. Do not read the exact "
+      "sequence")
+print("above as the finding -- the finding is that the rubric's number is")
+print("attached to a named criterion and the bare scale's is not -- whatever "
+      "value it")
+print("happens to land on. Dropped runs, when they occur, are §6.4 again: the "
+      "fix is")
+print("a schema with an integer field, not an instruction to reply with just the "
+      "number.")
