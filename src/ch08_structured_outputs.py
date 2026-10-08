@@ -162,13 +162,21 @@ if HAVE_ANTHROPIC:
     messages = [{"role": "user",
                  "content": "What did I order on KL-449021, and when did it arrive?"}]
     turns = 0
+    spent_in = spent_out = 0
 
-    while True:
+    # §8.6 prints this as a `for` with an `else`, not a `while True`. An earlier
+    # version of this file had the `while True` and a `turns` counter that was
+    # incremented and never tested, which is the defect the chapter's own next
+    # paragraph warns about.
+    MAX_ITERATIONS = 10
+    for _ in range(MAX_ITERATIONS):
         response = client.messages.create(
             model="claude-opus-5", max_tokens=4000,
             tools=[get_order, search_orders],
             messages=messages,
         )
+        spent_in += response.usage.input_tokens
+        spent_out += response.usage.output_tokens
         if response.stop_reason != "tool_use":
             break
         turns += 1
@@ -183,9 +191,14 @@ if HAVE_ANTHROPIC:
                     "content": run_tool(block.name, block.input),
                 })
         messages.append({"role": "user", "content": results})
+    else:
+        raise RuntimeError(
+            f"gave up after {MAX_ITERATIONS} tool iterations "
+            f"(in={spent_in}, out={spent_out})")
 
     final = "".join(b.text for b in response.content if b.type == "text")
-    print(f"\nafter {turns} tool turn(s): {final.strip()[:240]}")
+    print(f"\nafter {turns} tool turn(s), in={spent_in} out={spent_out}: "
+          f"{final.strip()[:240]}")
 
 # %% [markdown]
 # ## The three experiments §8.3–8.5 publish

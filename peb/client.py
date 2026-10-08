@@ -223,14 +223,18 @@ def _to_openai_tool(t):
 
 
 def run_tools(prompt, tools, run_tool, model=None, max_tokens=2000,
-              max_turns=3, system=None, trace=None):
+              max_turns=10, system=None, trace=None):
     """Run an agent loop and return (final_text, turns, usage_totals).
 
     `run_tool(name, args) -> str` executes one call. Errors should be RETURNED
     as a string, not raised: §9.2's finding is that a model recovers from an
     error it can read, and it cannot read an exception.
 
-    `max_turns` is a hard cap. An uncapped agent loop is an outage, §12.3.
+    `max_turns` is a hard cap, and exhausting it RAISES rather than returning an
+    empty answer. §9.4 is the argument: a cap that stops silently hands back a
+    half-finished answer that looks finished, which is the §13.1 failure wearing
+    an agent's clothes. The default is deliberately generous -- §9.7's run needed
+    seven calls, so a cap of five would have failed a task the agent could do.
     `trace` is an optional list that receives one dict per turn.
     """
     kind = backend()
@@ -262,7 +266,9 @@ def run_tools(prompt, tools, run_tool, model=None, max_tokens=2000,
                     results.append({"type": "tool_result", "tool_use_id": b.id,
                                     "content": out})
             msgs.append({"role": "user", "content": results})
-        return "", turns, _Usage(tin, tout)
+        raise RuntimeError(
+            f"iteration cap reached: {max_turns} turns without a final answer "
+            f"(in={tin}, out={tout}). Raise max_turns or fix the tool -- §9.7.")
 
     # OpenRouter / OpenAI-compatible
     import json as _json
@@ -298,4 +304,6 @@ def run_tools(prompt, tools, run_tool, model=None, max_tokens=2000,
                 trace.append({"turn": turns, "tool": c.function.name,
                               "args": args, "result": out})
             msgs.append({"role": "tool", "tool_call_id": c.id, "content": out})
-    return "", turns, _Usage(tin, tout)
+    raise RuntimeError(
+        f"iteration cap reached: {max_turns} turns without a final answer "
+        f"(in={tin}, out={tout}). Raise max_turns or fix the tool -- §9.7.")

@@ -155,8 +155,11 @@ def tool(name, args):
 
 
 trace = []
+# A generous cap, as §9.4 argues: well above what a healthy run needs, with
+# alerting on runs that approach it. Exhausting it raises; it does not return
+# an empty answer.
 answer, turns, usage = run_tools(QUESTION, [TOOL], tool, max_tokens=2000,
-                                 max_turns=3, trace=trace)
+                                 max_turns=10, trace=trace)
 
 for t in trace:
     print(f"call {t['turn']}:  {t['args'].get('code','')[:88]}")
@@ -207,7 +210,7 @@ def flaky(name, args):
 
 trace2 = []
 answer2, turns2, _ = run_tools(QUESTION.replace("pallets", "tonnage of pallets"),
-                               [TOOL], flaky, max_tokens=2000, max_turns=3,
+                               [TOOL], flaky, max_tokens=2000, max_turns=10,
                                trace=trace2)
 
 for t in trace2:
@@ -271,7 +274,7 @@ def traced(name, args):
 
 
 answer, turns, usage = run_tools(QUESTION_HARD, [TOOL_SPEC], traced,
-                                 max_tokens=3000, max_turns=3)
+                                 max_tokens=3000, max_turns=10)
 
 for i, (code, out) in enumerate(calls, 1):
     print(f"call {i}:  {code[:96]}")
