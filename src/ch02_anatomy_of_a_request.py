@@ -174,3 +174,38 @@ for m in MODELS_UNDER_TEST:
 print("\nRetrieval is not aggregation. A model that finds one fact in 21,000")
 print("tokens can still miscount what it found, and the failure is silent:")
 print("the answer looks like an answer. §9.1 hands the same question to a tool.")
+
+
+# %% [markdown]
+# ## §2.6 The model comparison, and the tokeniser hiding inside it
+#
+# §2.6 publishes a cost comparison across five models and Exercise 4 asks you to
+# run it on your own task. The prompt behind the published table was not
+# recorded, so this is a reconstruction: same sentence, same one-word
+# instruction. It gives the same *shape* and not the same token counts -- the
+# published row for `claude-opus-5` is 64 input tokens and this prompt is 62.
+#
+# What the reconstruction does establish is the confound. The same prompt is
+# materially more expensive in input tokens on the newer models, because they
+# use a different tokeniser (§2.2). Part of the spread in the cost column is
+# price per token and part of it is tokens per prompt.
+
+# %%
+SENTIMENT_TEXT = ("The delivery was late and the packaging was damaged, "
+                  "but the product itself works perfectly")
+SENTIMENT_PROMPT = (
+    "Classify the sentiment of this review as positive, negative or mixed. "
+    f"Reply with one word.\n\n{SENTIMENT_TEXT}")
+
+print(f"{'model':<22}{'in':>5}{'out':>5}  reply")
+for _m in ("claude-opus-5", "claude-sonnet-5", "claude-haiku-4.5"):
+    # 200, not 20: at 20 the reasoning model spends the whole budget thinking
+    # and returns an empty string -- §2.3's failure, which would be a different
+    # finding printed in the middle of this one.
+    _txt, _u, _ = ask(SENTIMENT_PROMPT, model=_m, max_tokens=200,
+                      raise_on_empty=False)
+    print(f"{_m:<22}{_u.input_tokens:>5}{_u.output_tokens:>5}  {_txt.strip()[:20]!r}")
+
+print("\nIdentical text, different input-token counts. That is the §2.2")
+print("tokeniser effect appearing inside a cost comparison, so re-measure the")
+print("ratio on your own text rather than reading it off a price list.")

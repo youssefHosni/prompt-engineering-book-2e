@@ -64,6 +64,8 @@ for s in "${scripts[@]}"; do
 done
 
 echo
-echo "$fail script(s) failed. Live output in outputs/live/ — the book's own"
-echo "recorded runs stay untouched in outputs/, so you can compare."
+echo "$fail script(s) failed. Live output in outputs/live/, with every call"
+echo "logged in outputs/run-log.jsonl. The files directly in outputs/ are the"
+echo "book's result blocks extracted from the manuscript — useful to read"
+echo "beside a run, but they are not runs, so they cannot confirm one."
 exit $fail

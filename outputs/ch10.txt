@@ -1,13 +1,21 @@
 Chapter 10 — Skills: Packaging a Capability
 ===========================================
 
-The output as printed in the book, from the run that produced the
-numbers in the text. Re-running the script will not reproduce it
-character for character -- that is the point of Chapter 3 §3.1, and
-of the Wilson intervals in Chapter 14. What should reproduce is the
-*finding*: the direction, the spread, and which checks fail.
+The result blocks as printed in the book, extracted from the manuscript
+so you can read them beside a real run in `outputs/live/`.
 
-Source: manuscript/10-skills-architecture.md (3 recorded outputs)
+**This file is not a run record.** It is the book's own output, taken
+from the book -- so it cannot corroborate the book, and the block
+headers below are manuscript line numbers, not timestamps. The runs
+live in `outputs/live/`, and every call behind them is logged in
+`outputs/run-log.jsonl` with its model, date and token counts.
+
+Re-running a script will not reproduce these character for character --
+that is the point of Chapter 3 §3.1 and of the Wilson intervals in
+Chapter 14. What should reproduce is the *finding*: the direction, the
+spread, and which checks fail.
+
+Source: manuscript/10-skills-architecture.md (3 recorded blocks)
 
 --- 10-skills-architecture.md:63 ----------------------------------
 
