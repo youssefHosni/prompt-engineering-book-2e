@@ -63,30 +63,36 @@ run("summarise (logistics lead)", ops)
 # Those two summaries share no content. Neither is wrong; they answer different
 # questions, and two clauses made the difference.
 #
-# ## §7.2 Extraction — the keys are fixed, so the check is trivial
+# ## §7.2 Extracting — the keys are fixed, so the check is trivial
 
 # %%
-extract = """Extract from the review. Use exactly these keys, one per line,
-in this order. Use the literal string NONE if a value is absent.
-
-order_ref | ordered_date | arrived_date | support_hours
+# Verbatim from §7.2. The script previously asked for four keys and the sentinel
+# NONE, where the book asks for five keys and `null` -- so none of the chapter's
+# published extraction output was reproducible from this file.
+extract = """Extract from the review. Use exactly these keys, one per line, in
+this order: order_ref, ordered_date, arrived_date, faults (semicolon separated),
+support_hours. Use the string null if the review does not state it.
 
 Review: ```{review}```"""
 
 run("extract", extract,
     all_keys=lambda t: all(k in t for k in
-                           ("order_ref", "ordered_date", "arrived_date", "support_hours")))
+                           ("order_ref", "ordered_date", "arrived_date",
+                            "faults", "support_hours")))
 
 # %% [markdown]
-# ## §7.3 Classification
+# ## §7.3 Classifying — closed sets, and why the set matters
 
 # %%
-classify = """Classify this review. Reply with exactly these three lines
-and nothing else:
-
+# Verbatim from §7.3. The script asked for `recommends` and `faults`; the book
+# asks for `would_recommend` and a closed `topics` set, which is what makes its
+# published `topics:` row impossible to produce from the old version.
+classify = """Classify this review. Reply with exactly these three lines and
+nothing else:
 sentiment: positive | negative | mixed
-recommends: yes | no
-faults: a comma-separated list, or NONE
+would_recommend: yes | no | unclear
+topics: any of [delivery, build_quality, documentation, support, performance],
+        comma separated
 
 Review: ```{review}```"""
 
@@ -94,7 +100,7 @@ run("classify", classify,
     three_lines=lambda t: len([l for l in t.strip().splitlines() if l.strip()]) == 3)
 
 # %% [markdown]
-# ## §7.4 Transformation — the risk is silent loss
+# ## §7.4 Transforming — the risk is silent loss
 #
 # `must_keep` is the whole technique. Decide what must survive, then check it in
 # code rather than reading the output and feeling reassured.
@@ -111,7 +117,7 @@ run("transform", transform,
     kept=lambda t: [k for k in must_keep if k.lower() not in t.lower()] or "all kept")
 
 # %% [markdown]
-# ## §7.5 Translation — the same check, across a script boundary
+# ## §7.5 Translating — the same check, across a script boundary
 
 # %%
 translate = """Translate the review into Modern Standard Arabic. Keep product
@@ -123,13 +129,13 @@ run("translate", translate,
     latin_kept=lambda t: "KL-449021" in t and "Nordic 400" in t)
 
 # %% [markdown]
-# ## §7.6 Expansion — the highest-risk task, so the most constraints
+# ## §7.6 Generating — the highest-risk task, so the most constraints
 #
 # This is the far right of the axis. Every constraint here exists because its
 # absence produced something wrong once.
 
 # %%
-expand = """Write a reply to this customer.
+generate = """Write a reply to this customer.
 Length: 60 to 80 words.
 Acknowledge the late delivery and the drip tray.
 Offer a replacement tray. Do not offer a refund.
@@ -138,7 +144,7 @@ Sign as 'Kestrel Support'.
 
 Review: ```{review}```"""
 
-run("expand", expand,
+run("generate", generate,
     length=lambda t: len(t.split()),
     no_refund=lambda t: "refund" not in t.lower(),
     signed=lambda t: "Kestrel Support" in t)
