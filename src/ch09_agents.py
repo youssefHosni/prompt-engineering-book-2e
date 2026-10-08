@@ -56,6 +56,8 @@ run_python = {
         "type": "object",
         "properties": {"code": {"type": "string"}},
         "required": ["code"],
+        # §8.3 says to set this, and ch09's definition did not.
+        "additionalProperties": False,
     },
 }
 

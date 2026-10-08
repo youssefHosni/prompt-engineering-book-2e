@@ -44,7 +44,7 @@ def evaluate(code, rows):
         # while a nested comprehension raised "name 'rows' is not defined", and
         # a name used inside a lambda was invisible. Both now work.
         #
-        # §9.6's trace was captured before this fix and reports both failures.
+        # §9.7's trace was captured before this fix and reports both failures.
         # If you are reading that trace against this code, it will not reproduce
         # -- which is the point the chapter makes about tool ergonomics, arriving
         # one layer down.
