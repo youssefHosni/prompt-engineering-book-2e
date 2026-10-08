@@ -147,3 +147,30 @@ for model in MODELS:
 
 print("\nTwelve problems, not twelve runs of one. Both are legitimate and they")
 print("measure different things, which is why §4.1 now says which it means.")
+
+
+# %% [markdown]
+# ## §4.5 The effort ladder, including the rung the chapter skipped
+#
+# §4.5 published `low` and `high` and told the reader to step one setting at a
+# time, which skips `medium`. This runs all three over the twelve problems.
+#
+# How effort is set is provider-specific and this is the OpenRouter spelling:
+# `extra_body={"reasoning": {"effort": ...}}`. Through the native Anthropic SDK
+# it is `output_config`, and on `claude-haiku-4-5` it is not accepted at all
+# (§2.5). Check your own provider's reference rather than copying this line.
+
+# %%
+print(f"{'effort':<10}{'correct':>9}{'out tok/problem':>18}")
+for _eff in ("low", "medium", "high"):
+    _hits = _tok = 0
+    for _q, _answer in ARITHMETIC_12:
+        _text, _usage = ask(_q, model="claude-sonnet-5", max_tokens=4000,
+                            extra_body={"reasoning": {"effort": _eff}})
+        _hits += pence(_text) == _answer
+        _tok += _usage.output_tokens
+    print(f"{_eff:<10}{_hits:>6}/12{_tok / 12:>18.0f}")
+
+print("\nAccuracy flat, cost monotonic. On a task the low setting already")
+print("handles, every step up buys deliberation you do not need -- which is")
+print("§4.5's conclusion with the middle rung filled in.")

@@ -40,15 +40,34 @@ Reply with JSON only.
 
 Review: Drip tray warped after a week. Order ref KL-449021."""
 
+# This used to test `startswith("{") and endswith("}")` and then print "the
+# code fences are the usual culprit" -- and §8.1 hardened that into "every one
+# arrived inside a Markdown fence", which is a claim about all thirty responses
+# that nothing here recorded. A fence, a preamble, two objects and trailing
+# prose all fail a bare-JSON test identically. So classify the failure instead
+# of guessing at it.
+import collections
+
 clean = 0
+why = collections.Counter()
 for i in range(8):
     text, _ = ask(naive, max_tokens=4000)
     stripped = text.strip()
-    clean += stripped.startswith("{") and stripped.endswith("}")
+    if stripped.startswith("{") and stripped.endswith("}"):
+        clean += 1
+        why["parsed as-is"] += 1
+    elif stripped.startswith("```"):
+        why["markdown fence"] += 1
+    elif "{" in stripped:
+        why["prose around the JSON"] += 1
+    else:
+        why["no JSON at all"] += 1
     if i == 0:
         print(f"first reply: {stripped[:70]!r}")
 
-print(f"\nparsed without repair: {clean}/8 — the code fences are the usual culprit.")
+print(f"\nparsed without repair: {clean}/8")
+for reason, count in why.most_common():
+    print(f"  {reason:<24}{count}/8")
 
 # %% [markdown]
 # ## §8.2 The same extraction, with a schema

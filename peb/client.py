@@ -251,6 +251,10 @@ def run_tools(prompt, tools, run_tool, model=None, max_tokens=2000,
             r = client.messages.create(model=anthropic_id, max_tokens=max_tokens,
                                        tools=tools, messages=msgs, **kw)
             tin += r.usage.input_tokens; tout += r.usage.output_tokens
+            # Log every turn. run_tools used to log nothing, which meant the
+            # agent experiments -- the ones whose cost §9.4 reports -- were the
+            # only calls in the book with no per-call record.
+            _log(model, max_tokens, prompt, "", r.usage, r.stop_reason)
             if r.stop_reason != "tool_use":
                 text = "".join(b.text for b in r.content if b.type == "text")
                 return text, turns, _Usage(tin, tout)
@@ -284,6 +288,9 @@ def run_tools(prompt, tools, run_tool, model=None, max_tokens=2000,
         u = getattr(r, "usage", None)
         if u:
             tin += u.prompt_tokens or 0; tout += u.completion_tokens or 0
+            _log(model, max_tokens, prompt, "",
+                 _Usage(u.prompt_tokens or 0, u.completion_tokens or 0),
+                 r.choices[0].finish_reason)
         m = r.choices[0].message
         if not getattr(m, "tool_calls", None):
             return (m.content or ""), turns, _Usage(tin, tout)
