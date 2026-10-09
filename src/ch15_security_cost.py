@@ -254,3 +254,85 @@ if HAVE_ANTHROPIC:
     print("is where the breakpoint sits -- the cached span is everything up to the")
     print("marker, so text appended before that marker is INSIDE the cached")
     print("content, not after it.")
+
+
+# %% [markdown]
+# ## §15.4–15.5 on the aggregator, which turns out to work
+#
+# The cells above skip both caching experiments without `ANTHROPIC_API_KEY`,
+# on the grounds that `cache_control` is provider-specific. That was true of
+# the *native SDK* and not of the request: OpenRouter forwards `cache_control`
+# on a content block and reports the result in
+# `usage.prompt_tokens_details`, as `cache_write_tokens` then `cached_tokens`.
+#
+# So these two experiments can run on the key this book was measured with,
+# which means §15.4's and §15.5's figures finally have code behind them.
+
+# %%
+import os as _os
+
+from openai import OpenAI as _OpenAI
+
+_or_key = _os.getenv("OPENROUTER_API_KEY")
+CACHE_MODEL = "anthropic/claude-opus-4.1"
+
+# Long enough to be worth caching: the minimum cacheable prefix is 1024 tokens
+# on most tiers, and a shorter one silently caches nothing, which would read as
+# a finding about caching rather than about the prompt.
+POLICY_BLOCK = (POLICY + "\n\n") * 12
+QUESTION = "In one sentence: what is the claims window?"
+
+
+def _cache_call(text, marked):
+    """One call. Returns (prompt_tokens, cached, written)."""
+    block = {"type": "text", "text": text}
+    if marked:
+        block["cache_control"] = {"type": "ephemeral"}
+    r = _OpenAI(base_url="https://openrouter.ai/api/v1",
+                api_key=_or_key).chat.completions.create(
+        model=CACHE_MODEL, max_tokens=100,
+        messages=[{"role": "system", "content": [block]},
+                  {"role": "user", "content": QUESTION}])
+    u = r.usage
+    d = getattr(u, "prompt_tokens_details", None)
+    return (u.prompt_tokens,
+            getattr(d, "cached_tokens", 0) or 0,
+            getattr(d, "cache_write_tokens", 0) or 0)
+
+
+if _or_key:
+    print(f"{'':<26}{'prompt':>8}{'cached':>8}{'written':>9}")
+    for _ in range(3):
+        p, c, w = _cache_call(POLICY_BLOCK, marked=False)
+        print(f"{'no cache_control':<26}{p:>8,}{c:>8,}{w:>9,}")
+    print()
+    for _ in range(3):
+        p, c, w = _cache_call(POLICY_BLOCK, marked=True)
+        print(f"{'with cache_control':<26}{p:>8,}{c:>8,}{w:>9,}")
+    print("\nCaching is opt-in. The marker is the whole difference.")
+
+# %% [markdown]
+# ### What actually breaks a cache
+#
+# The rule is that the cache matches a prefix, which people translate into
+# "put your changes at the end". This is the experiment that shows why that
+# is wrong.
+
+# %%
+if _or_key:
+    VARIATIONS = [
+        ("identical prefix", POLICY_BLOCK),
+        ("one word appended at the END", POLICY_BLOCK + " Reviewed."),
+        ("timestamp prepended at the START", "2026-10-09. " + POLICY_BLOCK),
+        ("identical again", POLICY_BLOCK),
+    ]
+    print(f"{'':<36}{'cached':>8}{'written':>9}")
+    for label, text in VARIATIONS:
+        _p, c, w = _cache_call(text, marked=True)
+        print(f"{label:<36}{c:>8,}{w:>9,}")
+
+    print("\nThe timestamp is expected: a byte changed at the front invalidates")
+    print("everything after it. The appended word is the surprise, and the")
+    print("reason is where the breakpoint sits -- the cached span is everything")
+    print("up to the marker, so text appended BEFORE that marker is inside the")
+    print("cached content, not after it.")

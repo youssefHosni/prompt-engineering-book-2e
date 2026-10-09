@@ -1,18 +1,20 @@
-14 replies; 9 violate at least one rule (verified in code)
-word counts: [57, 52, 52, 59, 56, 57, 53, 51, 53, 53, 52, 51, 51, 57]
+14 replies; 6 violate at least one rule (verified in code)
+word counts: [53, 57, 56, 53, 59, 53, 58, 55, 57, 49, 56, 51, 52, 56]
 RuntimeError: Empty response: the output budget (16) was consumed by thinking. Raise max_tokens or lower effort. See §2.3.
 RuntimeError: Empty response: the output budget (16) was consumed by thinking. Raise max_tokens or lower effort. See §2.3.
 RuntimeError: Empty response: the output budget (16) was consumed by thinking. Raise max_tokens or lower effort. See §2.3.
 
 3/3 raised instead of returning quietly.
 parsed 14/14   unparseable 0/14
-word count within 1: 14/14  (over every run, not only the ones
-that parsed -- a rate computed over survivors is how a failing checker
-flatters itself)
-same model, 'is it compliant?'   agreed with code on 13/14
+word count within 1:   12/14
+`signed` correct:      14/14
+both fields right:     12/14  <- the rule is both
+(rates over every run, not only the ones that parsed -- a rate computed
+over survivors is how a failing checker flatters itself)
+same model, 'is it compliant?'   agreed with code on 10/14
 three lines of code              the reference; not scored against itself
 
-the model checker disagreed with the code on 1/14 replies.
+the model checker disagreed with the code on 4/14 replies.
 Each disagreement is either a miss or a false alarm, and the code is the
 answer key only because these rules are expressible in code. §13.5 is
 about the ones that are not.

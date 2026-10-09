@@ -19,11 +19,27 @@ description: >
 
 ## Rules
 
-- Never invent a change that is not in the PR list.
+- Never invent a change that is not in the PR list. An invented entry is
+  indistinguishable from a real one once it is published.
 - If a PR title is unclear, list it under `Needs description` rather than
-  guessing what it did.
-- Never edit an existing version heading. Append only.
+  guessing what it did. A guess that reads well is worse than a gap.
+- Never edit an existing version heading. Append only, because a published
+  changelog entry is a reference other people have linked to.
 - If `merged_since.py` exits with an error rather than a list, stop and report
-  the error. Do not continue to step 2.
-- If there are no merged PRs, say so and stop. Do not produce an empty
-  section.
+  the error. Do not continue to step 2: grouping a list you never received is
+  how a loop invents a release.
+- If there are no merged PRs, say so and stop. An empty section implies a
+  release happened.
+
+## Done means
+
+`CHANGELOG.md` has a new version heading, every line under it traces to a PR
+number from step 1, no line contains a word banned by
+`references/house-style.md`, and no previous heading was touched. Check these,
+not your impression of the output.
+
+<!-- last reviewed: 2026-10-09, by the author.
+     §11.10: a skill is a document with an owner and a review cadence. This
+     line is the cadence. An approved release note belongs in
+     references/past-releases.md as a worked example -- a real one beats an
+     invented one. -->

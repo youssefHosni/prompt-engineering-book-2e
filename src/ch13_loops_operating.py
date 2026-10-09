@@ -97,7 +97,7 @@ CHECK = {"type": "object",
          "required": ["word_count", "signed"],
          "additionalProperties": False}
 
-parsed = caught = unparseable = 0
+parsed = caught = unparseable = signed_right = both_right = 0
 for r in replies:
     text, _ = ask(f"Return JSON matching this schema for the reply below.\n"
                   f"{json.dumps(CHECK)}\n\nReply:\n{r}", model=MODEL, max_tokens=4000)
@@ -121,13 +121,25 @@ for r in replies:
         continue
 
     parsed += 1
-    if abs(obj.get("word_count", -1) - len(r.split())) <= 1:
+    # Both fields, not one. CHECK *requires* `signed` and an earlier version of
+    # this loop parsed it and threw it away -- so the checker could not have
+    # caught a signature violation, which is half the rule it is handed, and
+    # the published "caught" figure was a verdict on word count alone.
+    count_ok = abs(obj.get("word_count", -1) - len(r.split())) <= 1
+    signed_ok = obj.get("signed") == ("Kestrel Support" in r)
+    if count_ok:
         caught += 1
+    if signed_ok:
+        signed_right += 1
+    if count_ok and signed_ok:
+        both_right += 1
 
 print(f"parsed {parsed}/{RUNS}   unparseable {unparseable}/{RUNS}")
-print(f"word count within 1: {caught}/{RUNS}  (over every run, not only the ones")
-print(f"that parsed -- a rate computed over survivors is how a failing checker")
-print(f"flatters itself)")
+print(f"word count within 1:   {caught}/{RUNS}")
+print(f"`signed` correct:      {signed_right}/{RUNS}")
+print(f"both fields right:     {both_right}/{RUNS}  <- the rule is both")
+print(f"(rates over every run, not only the ones that parsed -- a rate computed")
+print(f"over survivors is how a failing checker flatters itself)")
 if unparseable:
     print(f"\nIn a loop rather than an experiment, those {unparseable} would halt or")
     print("escalate. Here they are counted, which is the weakest acceptable form of")
